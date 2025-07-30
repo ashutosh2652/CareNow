@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { config } from "./env.js";
 
 let isConnected = false;
-async function connect() {
+async function connectdb() {
     if (isConnected) return;
     const options = {
         tls: true,
@@ -20,7 +20,7 @@ async function connect() {
         throw error;
     }
 }
-async function disconnect() {
+async function disconnectdb() {
     if (!isConnected) return;
     try {
         await mongoose.disconnect();
@@ -31,4 +31,4 @@ async function disconnect() {
         throw error;
     }
 }
-export { connect, disconnect };
+export { connectdb, disconnectdb };
