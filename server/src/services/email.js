@@ -16,10 +16,10 @@ export default function (email, name, token, options) {
     }
     const emailmessage = emailTemplates[options](name, token);
     const mailOptions = {
-        from: config.EMAIL_USERNAME,
+        from: `"CareNow" ${config.EMAIL_USERNAME}`,
         to: email,
         subject: emailmessage.subject,
-        text: emailmessage.html,
+        html: emailmessage.html,
     };
     try {
         transporter.sendMail(mailOptions, (err, info) => {

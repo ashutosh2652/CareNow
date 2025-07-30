@@ -1,4 +1,4 @@
-import { config } from "./env";
+import { config } from "./env.js";
 
 const WHITELIST_URL = new Set(
     (config.CORS_WHITELIST || "")
@@ -22,6 +22,7 @@ const BASE_CORS = {
 };
 function cors_option(req, cb) {
     const origin = req.get("Origin");
+    if (!origin) return cb(null, { origin: true, ...BASE_CORS });
     const allowed =
         WHITELIST_URL.length === 0 || WHITELIST_URL.includes(origin);
     cb(null, allowed ? { origin: true, ...BASE_CORS } : { origin: false });

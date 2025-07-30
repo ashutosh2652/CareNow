@@ -5,7 +5,9 @@ function globalErrorHandler(error, req, res, next) {
     return res.status(error.statusCode).json({
         success: false,
         message: error.message,
-        ...(config.NODE_ENV === "development" && { stack: error.stack }),
+        ...(config.NODE_ENV === "development" && {
+            stack: error.stack || null,
+        }),
     });
 }
 export default globalErrorHandler;

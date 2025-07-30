@@ -9,6 +9,12 @@ import {
     deleteImageFromCloudinary,
     uploadImageToCloudinary,
 } from "../services/fileStorage.services.js";
+
+import crypto from "crypto";
+
+function generateVerificationToken() {
+    return crypto.randomBytes(32).toString("hex");
+}
 const googleAuth = passport.authenticate("google", {
     scope: ["profile", "email"],
 });
@@ -32,15 +38,19 @@ const getUser = (req, res) => {
 };
 const RegisterUser = async (req, res, next) => {
     try {
+        // console.log(req, "body!");
+
         const { email, password, fullName } = req.body;
         if (!email || !password || !fullName)
             return next(new ApiError(400, "Please enter valid details!"));
-        const user = await User.find({ email });
+        const user = await User.findOne({ email });
+        console.log(user, "user");
+
         if (user)
             return next(
                 new ApiError(400, "This email already exist.Try some new email")
             );
-        const emailVerificationToken = user.generateVerificationToken();
+        const emailVerificationToken = generateVerificationToken();
         const emailVerificationExpiry = Date.now() + 60 * 60 * 1000;
         const newUser = await User.create({
             email,
@@ -48,11 +58,7 @@ const RegisterUser = async (req, res, next) => {
             fullName,
             emailVerificationToken,
             emailVerificationExpiry,
-        })
-            .lean()
-            .select(
-                "-password -__v -resetPasswordVerified -resetPasswordExpiry -resetPasswordToken -emailVerificationExpiry -emailVerificationToken"
-            );
+        });
         SendEmail(email, fullName, emailVerificationToken, "verifyEmail");
         req.login(newUser, (err) => {
             if (err) return next(err);
@@ -135,6 +141,9 @@ const verifyEmailId = async (req, res, next) => {
         user.emailVerificationToken = null;
         user.emailVerificationExpiry = null;
         await user.save();
+        req.login(user, (err) => {
+            if (err) return next(err);
+        });
         res.status(200).json(
             new ApiResponse(200, user, "Email verified successfully!")
         );
@@ -154,7 +163,7 @@ const regenerateVerificationEmailToken = async (req, res, next) => {
         if (email.isEmailVerified)
             return next(new ApiError(400, "Email is already verified!"));
 
-        const emailVerificationToken = user.generateVerificationToken();
+        const emailVerificationToken = generateVerificationToken();
         const emailVerificationExpiry = Date.now() + 60 * 60 * 1000;
         user = { ...user, emailVerificationExpiry, emailVerificationToken };
         await user.save();
@@ -181,7 +190,7 @@ const generateVerificationPasswordToken = async (req, res, next) => {
                 new ApiError(400, "No user exist with provided email!")
             );
 
-        const resetPasswordToken = user.generateVerificationToken();
+        const resetPasswordToken = generateVerificationToken();
         const resetPasswordExpiry = Date.now() + 60 * 60 * 1000;
         user.resetPasswordToken = resetPasswordToken;
         user.resetPasswordExpiry = resetPasswordExpiry;

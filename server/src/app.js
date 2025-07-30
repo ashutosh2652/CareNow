@@ -11,7 +11,6 @@ import passport from "passport";
 import session from "express-session";
 import passportConfig from "./config/passport.js";
 import { config } from "./config/env.js";
-import VerifySession from "./middleware/VerifySession.middleware.js";
 const app = express();
 app.use(cors(cors_option));
 app.use(express.json({ limit: "16kb" }));
@@ -43,7 +42,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(VerifySession);
 app.use("/api", limiter);
 app.use("/health", (req, res) => {
     res.status(200).json({

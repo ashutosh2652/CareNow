@@ -1,8 +1,8 @@
 import { app } from "./app.js";
-import { connect, disconnectdb } from "./config/db.js";
+import { connectdb, disconnectdb } from "./config/db.js";
 import { config } from "./config/env.js";
 let server;
-connect()
+connectdb()
     .then(() => {
         app.on("error", (error) => {
             console.log("Error!!", error);

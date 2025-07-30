@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 const UserSchema = new mongoose.Schema(
     {
         email: {
@@ -77,8 +76,8 @@ const UserSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-UserSchema.pre("save", async (next) => {
-    if (!this.isModified("password") || !this.password) next();
+UserSchema.pre("save", async function (next) {
+    if (!this.isModified("password") || !this.password) return next();
     try {
         this.password = await bcrypt.hash(this.password, 10);
         next();
@@ -89,10 +88,6 @@ UserSchema.pre("save", async (next) => {
 
 UserSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
-};
-
-UserSchema.methods.generateVerificationToken = function () {
-    return crypto.randomBytes(32).toString("hex");
 };
 
 export const User = mongoose.model("User", UserSchema);

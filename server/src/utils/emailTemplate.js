@@ -1,4 +1,4 @@
-const emailTemplates = {
+export const emailTemplates = {
     verifyEmail: (name, token) => ({
         subject: "🔐 Verify Your Email Address",
         html: `
@@ -35,25 +35,24 @@ const emailTemplates = {
           letter-spacing: 1px;
           color: #2563eb;
           font-weight: bold;
+          word-break: break-all;
         }
       </style>
     </head>
     <body>
       <div class="header">
-        <img src="https://your-logo-url.com/logo.png" alt="Company Logo">
+        <img src="https://www.carenowmedical.com/wp-content/uploads/2017/01/cropped-CareNow-1.png" alt="CareNow">
       </div>
       <div class="content">
         <h1>Welcome, ${name}!</h1>
         <p>Thank you for registering with us. To complete your registration, please verify your email address:</p>
 
         <p>
-          Verify Email Address
+          Please Enter below Code to Verify your Email:
         </p>
 
         <p class="code">
-        <b>
         ${token}
-        </b>
         </p>
 
         <p>This verification link will expire in <strong>24 hours</strong>.</p>
@@ -107,7 +106,7 @@ const emailTemplates = {
     </head>
     <body>
       <div class="header">
-        <img src="https://your-logo-url.com/logo.png" alt="Company Logo">
+        <img src="https://www.carenowmedical.com/wp-content/uploads/2017/01/cropped-CareNow-1.png" alt="CareNow">
       </div>
       <div class="content">
         <h1>Password Reset</h1>
