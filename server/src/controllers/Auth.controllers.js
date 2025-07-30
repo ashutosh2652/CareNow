@@ -48,7 +48,11 @@ const RegisterUser = async (req, res, next) => {
             fullName,
             emailVerificationToken,
             emailVerificationExpiry,
-        });
+        })
+            .lean()
+            .select(
+                "-password -__v -resetPasswordVerified -resetPasswordExpiry -resetPasswordToken -emailVerificationExpiry -emailVerificationToken"
+            );
         SendEmail(email, fullName, emailVerificationToken, "verifyEmail");
         req.login(newUser, (err) => {
             if (err) return next(err);

@@ -44,7 +44,9 @@ passport.serializeUser((user, done) => {
 });
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = await User.findById(id).select("-password");
+        const user = await User.findById(id).select(
+            "-password -__v -resetPasswordVerified -resetPasswordExpiry -resetPasswordToken -emailVerificationExpiry -emailVerificationToken"
+        );
         done(null, user);
     } catch (error) {
         done(error, null);
