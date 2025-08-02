@@ -115,28 +115,20 @@ const LoginUser = async (req, res, next) => {
 };
 const verifyEmailId = async (req, res, next) => {
     try {
-        const { email, token } = req.body;
+        const { email } = req.body;
+        const { token } = req.params;
         if (!email) return next(new ApiError(400, "Please provide emailId"));
         if (!token)
             return next(
                 new ApiError(400, "Please provide verification code to verify!")
             );
         const currentDate = Date.now();
-        const user = await User.findOne({ email });
-        if (!user)
-            return next(
-                new ApiError(400, "User with provided email doesnot exist!")
-            );
-        if (token != user.emailVerificationToken)
-            return next(
-                new ApiError(400, "Wrong verification token provided!")
-            );
-        const difference = currentDate - user.emailVerificationExpiry;
-        if (difference > 0) {
-            return next(
-                new ApiError(400, "Token is already expired! Please try again!")
-            );
-        }
+        const user = await User.findOne({
+            email,
+            emailVerificationToken: token,
+            emailVerificationExpiry: { $gt: currentDate },
+        });
+        if (!user) return next(new ApiError(400, "Invalid Token!"));
         user.isEmailVerified = true;
         user.emailVerificationToken = null;
         user.emailVerificationExpiry = null;
@@ -190,11 +182,8 @@ const generateVerificationPasswordToken = async (req, res, next) => {
                 new ApiError(400, "No user exist with provided email!")
             );
 
-        const resetPasswordToken = generateVerificationToken();
-        const resetPasswordExpiry = Date.now() + 60 * 60 * 1000;
-        user.resetPasswordToken = resetPasswordToken;
-        user.resetPasswordExpiry = resetPasswordExpiry;
-        user.resetPasswordVerified = false;
+        user.resetPasswordToken = generateVerificationToken();
+        user.resetPasswordExpiry = Date.now() + 60 * 60 * 1000;
         await user.save();
         SendEmail(email, fullName, resetPasswordToken, "resetPassword");
         res.status(200).json(
@@ -210,22 +199,21 @@ const generateVerificationPasswordToken = async (req, res, next) => {
         next(error);
     }
 };
-const checkPasswordToken = async (req, res, next) => {
+const checkPasswordTokenAndUpdatePassword = async (req, res, next) => {
     try {
         const { token } = req.params;
-        const { email } = req.body;
+        const { email, password } = req.body;
         if (!token) return next(new ApiError(400, "Please provide Token"));
         if (!email) return next(new ApiError(400, "Please provide email!"));
-        const user = await User.findOne({ email });
-        if (!user)
-            return next(new ApiError(400, "No user found with given email!"));
-        if (token != user.resetPasswordToken)
-            return next(new ApiError(400, "Wrong token entered"));
-        if (Date.now() > user.resetPasswordExpiry)
-            return next(
-                new ApiError(400, "Reset password token is already expired!")
-            );
-        user.resetPasswordVerified = true;
+        if (!password)
+            return next(new ApiError(400, "Please provide password!"));
+        const user = await User.findOne({
+            email,
+            resetPasswordToken: token,
+            resetPasswordExpiry: { $gt: Date.now() },
+        });
+        if (!user) return next(new ApiError(400, "Invalid Token"));
+        user.password = password;
         await user.save();
         res.status(200).json(
             new ApiResponse(
@@ -239,29 +227,7 @@ const checkPasswordToken = async (req, res, next) => {
         next(error);
     }
 };
-const changeCurrentPassword = async (req, res, next) => {
-    try {
-        const { email, newPassword } = req.body;
-        if (!email || !newPassword)
-            return next(
-                new ApiError(400, "Please provide valid email and password!")
-            );
-        const user = await User.findOne({ email, resetPasswordVerified: true });
-        if (!user) return next(new ApiError(400, "User doesnot find!"));
-        user.resetPasswordVerified = false;
-        user.password = newPassword;
-        user.resetPasswordToken = null;
-        user.resetPasswordExpiry = null;
-        await user.save();
-        const { password, ...newUser } = user._doc;
-        res.status(200).json(
-            new ApiResponse(200, newUser, "Password Saved Successfully!")
-        );
-    } catch (error) {
-        console.log(error);
-        next(error);
-    }
-};
+
 const updateProfilePicture = async (req, res, next) => {
     const user = req.user;
     if (!user)
@@ -299,7 +265,7 @@ const updateProfilePicture = async (req, res, next) => {
         },
         {
             new: true,
-            select: "-password -__v -resetPasswordVerified -resetPasswordExpiry -resetPasswordToken -emailVerificationExpiry -emailVerificationToken",
+            select: "-password -__v  -resetPasswordExpiry -resetPasswordToken -emailVerificationExpiry -emailVerificationToken",
         }
     );
     if (!newUser)
@@ -336,6 +302,6 @@ export {
     verifyEmailId,
     regenerateVerificationEmailToken,
     generateVerificationPasswordToken,
-    changeCurrentPassword,
-    checkPasswordToken,
+    checkPasswordTokenAndUpdatePassword,
+    updateProfilePicture,
 };

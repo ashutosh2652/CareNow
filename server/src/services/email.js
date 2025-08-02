@@ -17,7 +17,7 @@ export default function (email, name, token, options) {
     const emailmessage = emailTemplates[options](name, token);
     const mailOptions = {
         from: `"CareNow" ${config.EMAIL_USERNAME}`,
-        to: email,
+        to: `"${name}" ${email}`,
         subject: emailmessage.subject,
         html: emailmessage.html,
     };

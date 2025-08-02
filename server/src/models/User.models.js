@@ -63,10 +63,6 @@ const UserSchema = new mongoose.Schema(
         resetPasswordExpiry: {
             type: Date,
         },
-        resetPasswordVerified: {
-            type: Boolean,
-            default: false,
-        },
         accountStatus: {
             type: String,
             enum: ["active", "banned"],
