@@ -24,7 +24,7 @@ const googleAuthCallback = passport.authenticate("google", {
 });
 const googleCallbackRedirect = (req, res) => {
     const role = req.user.role.toUpperCase();
-    const successRedirectUrl = config[`CLIENT_URL_${role}`] + "/";
+    const successRedirectUrl = config.CLIENT_URL_PATIENT + "/";
     res.redirect(successRedirectUrl);
 };
 const getUser = (req, res) => {
@@ -284,7 +284,7 @@ const logoutUser = (req, res, next) => {
         if (err) return next(err);
         req.session.destroy((err) => {
             if (err) return next(err);
-            req.clearCookie("connect.sid");
+            res.clearCookie("connect.sid");
             res.status(200).json(
                 new ApiResponse(200, {}, "Logged out Successfully!")
             );

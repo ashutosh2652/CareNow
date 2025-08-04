@@ -14,7 +14,7 @@ export default function (passport) {
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
-                    const user = User.findOne({ googleId: profile.id });
+                    const user = await User.findOne({ googleId: profile.id });
                     if (user) done(null, user);
                     else {
                         const NewUser = new User({
@@ -25,7 +25,7 @@ export default function (passport) {
                                 isFromCloudinary: false,
                                 url: profile.photos[0].value,
                             },
-                            role: "user",
+                            role: "patient",
                             bio: "",
                             isEmailVerified: true,
                         });
@@ -40,7 +40,7 @@ export default function (passport) {
     );
 }
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user ? user._id : null);
 });
 passport.deserializeUser(async (id, done) => {
     try {
