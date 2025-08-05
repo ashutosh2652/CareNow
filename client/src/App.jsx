@@ -7,19 +7,22 @@ import { ClearError, getUser } from "./store/auth";
 import CheckAuth from "./components/common/CheckAuth";
 import AuthLayout from "./components/Auth/Layout";
 import ErrorPage from "./Error";
-import Login from "./pages/login";
+import Login from "./pages/auth/login";
 import Loading from "./Loading";
-import Register from "./pages/register";
+import Register from "./pages/auth/register";
 import { Skeleton } from "./components/ui/skeleton";
 import NotFound from "./not-found/NotFound";
 import PatientLayout from "./components/patient-view/Layout";
-import Blog from "./pages/blog";
-import Home from "./pages/home";
-import Contact from "./pages/contact";
-import AboutUs from "./pages/about";
-import Appointment from "./pages/appointment";
-import MyAppointment from "./pages/myappointment";
-import Profile from "./pages/profile";
+import Blog from "./pages/patient/blog";
+import Home from "./pages/patient/home";
+import Contact from "./pages/patient/contact";
+import AboutUs from "./pages/patient/about";
+import Appointment from "./pages/patient/appointment";
+import MyAppointment from "./pages/patient/myappointment";
+import Profile from "./pages/patient/profile";
+import VerifyEmail from "./pages/common/verify-email";
+import SendVerificationEmailForPatient from "./pages/patient/SendVerificationEmail";
+import WrongView from "./pages/common/WrongView";
 
 function App() {
   const dispatch = useDispatch();
@@ -52,6 +55,7 @@ function App() {
           path="/"
           element={<CheckAuth isAuthenticated={isAuthenticated} user={user} />}
         />
+        <Route path="/wrong-view" element={<WrongView />} />
         <Route
           path="/auth"
           element={
@@ -73,7 +77,9 @@ function App() {
             path="register"
             element={
               <Suspense fallback={<Loading />}>
-                <Register />
+                <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                  <Register />
+                </CheckAuth>
               </Suspense>
             }
           />
@@ -89,6 +95,23 @@ function App() {
               <Suspense fallback={<Loading />}>
                 <Home />
               </Suspense>
+            }
+          />
+          <Route
+            path="verify-email/resend"
+            element={
+              <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                <SendVerificationEmailForPatient />
+              </CheckAuth>
+            }
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="verify-email/:token"
+            element={
+              <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                <VerifyEmail />
+              </CheckAuth>
             }
           />
           <Route

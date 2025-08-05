@@ -6,6 +6,7 @@ const initialState = {
   user: null,
   isAuthenticated: false,
   error: null,
+  isEmailVerifying: true,
 };
 export const RegisterUser = createAsyncThunk(
   "/auth/register",
@@ -42,6 +43,32 @@ export const getUser = createAsyncThunk(
       const response = await api.get("/auth/user");
       console.log(response);
 
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return thunkApi.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+export const resendverificationemail = createAsyncThunk(
+  "/auth/resendemail",
+  async (email, thunkApi) => {
+    try {
+      const response = await api.post("/auth/resend-verification-email-token", {
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return thunkApi.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+export const VerifyEmailByToken = createAsyncThunk(
+  "/auth/verifyemail",
+  async ({ email, token }, thunkApi) => {
+    try {
+      const response = await api.post(`/auth/verify-email/${token}`, { email });
       return response.data;
     } catch (error) {
       console.log(error);
@@ -126,6 +153,31 @@ const AuthSlice = createSlice({
         state.isLoading = false;
         toast.dismiss("checkauth-loading");
         state.user = null;
+      })
+      .addCase(VerifyEmailByToken.pending, (state) => {
+        state.isEmailVerifying = true;
+      })
+      .addCase(VerifyEmailByToken.fulfilled, (state, action) => {
+        state.user = action.payload.success ? action.payload.data : null;
+      })
+      .addCase(VerifyEmailByToken.rejected, (state, action) => {
+        state.isEmailVerifying = false;
+        state.error = action.payload
+          ? action.payload.message
+          : action.error.message;
+      })
+      .addCase(resendverificationemail.pending, () => {
+        toast.loading("Sending Verification Email.", {
+          id: "verification-email",
+        });
+      })
+      .addCase(resendverificationemail.fulfilled, () => {
+        toast.dismiss("verification-email");
+        toast.success("Email with new verification link sent Successfully!");
+      })
+      .addCase(resendverificationemail.rejected, () => {
+        toast.dismiss("verification-email");
+        toast.error("Error occured while sending email");
       });
   },
 });

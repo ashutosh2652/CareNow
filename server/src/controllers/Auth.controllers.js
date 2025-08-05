@@ -27,13 +27,17 @@ const googleCallbackRedirect = (req, res) => {
     const successRedirectUrl = config.CLIENT_URL_PATIENT + "/";
     res.redirect(successRedirectUrl);
 };
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
+    // console.log(req.user, "user");
+
     if (req.user) {
-        return res
-            .status(200)
-            .json(new ApiResponse(200, req.user, "User is authenticated!"));
+        if (req.user.accountStatus === "active")
+            return res
+                .status(200)
+                .json(new ApiResponse(200, req.user, "User is authenticated!"));
+        else return next(new ApiError(401, " User is blocked by admin!"));
     } else {
-        res.status(401).json(new ApiError(401, "User is unauthenticated"));
+        return next(new ApiError(401, "User is unauthenticated"));
     }
 };
 const RegisterUser = async (req, res, next) => {
@@ -135,10 +139,12 @@ const verifyEmailId = async (req, res, next) => {
         await user.save();
         req.login(user, (err) => {
             if (err) return next(err);
+            return res
+                .status(200)
+                .json(
+                    new ApiResponse(200, user, "Email verified successfully!")
+                );
         });
-        res.status(200).json(
-            new ApiResponse(200, user, "Email verified successfully!")
-        );
     } catch (error) {
         console.error(error);
         next(error);
@@ -157,9 +163,11 @@ const regenerateVerificationEmailToken = async (req, res, next) => {
 
         const emailVerificationToken = generateVerificationToken();
         const emailVerificationExpiry = Date.now() + 60 * 60 * 1000;
-        user = { ...user, emailVerificationExpiry, emailVerificationToken };
+        user.emailVerificationExpiry = emailVerificationExpiry;
+        user.emailVerificationToken = emailVerificationToken;
         await user.save();
-        SendEmail(email, fullName, emailVerificationToken, "verifyEmail");
+        SendEmail(email, user.fullName, emailVerificationToken, "verifyEmail");
+        // req.user = user;
         res.status(200).json(
             new ApiResponse(
                 200,
