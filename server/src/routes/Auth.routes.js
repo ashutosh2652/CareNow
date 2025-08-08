@@ -13,6 +13,7 @@ import {
     checkPasswordTokenAndUpdatePassword,
     updateProfilePicture,
 } from "../controllers/Auth.controllers.js";
+import upload from "../middleware/multer.middleware.js";
 const router = express.Router();
 router.route("/google").get(googleAuth);
 router
@@ -32,5 +33,7 @@ router
 router
     .route("/change-password/:token")
     .patch(checkPasswordTokenAndUpdatePassword);
-router.route("/update-profile-picture").patch(updateProfilePicture);
+router
+    .route("/update-profile-picture")
+    .patch(upload.single("avatar"), updateProfilePicture);
 export default router;

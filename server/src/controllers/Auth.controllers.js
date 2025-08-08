@@ -23,7 +23,6 @@ const googleAuthCallback = passport.authenticate("google", {
     session: true,
 });
 const googleCallbackRedirect = (req, res) => {
-    const role = req.user.role.toUpperCase();
     const successRedirectUrl = config.CLIENT_URL_PATIENT + "/";
     res.redirect(successRedirectUrl);
 };
@@ -44,7 +43,7 @@ const RegisterUser = async (req, res, next) => {
     try {
         // console.log(req, "body!");
 
-        const { email, password, fullName } = req.body;
+        const { email, password, fullName, phone } = req.body;
         if (!email || !password || !fullName)
             return next(new ApiError(400, "Please enter valid details!"));
         const user = await User.findOne({ email });
@@ -60,6 +59,7 @@ const RegisterUser = async (req, res, next) => {
             email,
             password,
             fullName,
+            phone,
             emailVerificationToken,
             emailVerificationExpiry,
         });

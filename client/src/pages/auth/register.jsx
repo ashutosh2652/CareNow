@@ -9,6 +9,7 @@ import { useEffect } from "react";
 const initialState = {
   fullName: "",
   email: "",
+  phone: "",
   password: "",
 };
 function Register() {
@@ -27,7 +28,7 @@ function Register() {
       }
     });
   }
-  console.log(user, "user");
+  // console.log(user, "user");
   useEffect(() => {
     if (user && !user.isEmailVerified) {
       if (user.role === "patient") {

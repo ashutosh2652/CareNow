@@ -10,17 +10,25 @@ export default function (passport) {
                 clientID: config.CLIENT_ID,
                 clientSecret: config.CLIENT_SECRET,
                 callbackURL: "/api/auth/google/callback",
-                scope: ["email", "profile", "openid"],
+                scope: [
+                    "email",
+                    "profile",
+                    "openid",
+                    "https://www.googleapis.com/auth/user.phonenumbers.read",
+                ],
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
                     const user = await User.findOne({ googleId: profile.id });
-                    if (user) done(null, user);
+                    if (user) return done(null, user);
                     else {
+                        const phone =
+                            profile._json.phoneNumbers?.[0]?.value || "";
                         const NewUser = new User({
                             email: profile.emails[0].value,
                             googleId: profile.id,
                             fullName: profile.displayName,
+                            phone,
                             avatar: {
                                 isFromCloudinary: false,
                                 url: profile.photos[0].value,
@@ -30,6 +38,7 @@ export default function (passport) {
                             isEmailVerified: true,
                         });
                         await NewUser.save();
+                        return done(null, NewUser);
                     }
                 } catch (error) {
                     console.log(error);
@@ -40,7 +49,7 @@ export default function (passport) {
     );
 }
 passport.serializeUser((user, done) => {
-    done(null, user ? user._id : null);
+    done(null, user?._id ?? null);
 });
 passport.deserializeUser(async (id, done) => {
     try {

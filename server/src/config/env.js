@@ -19,6 +19,7 @@ const CLIENT_URL_ADMIN = process.env.CLIENT_URL_ADMIN;
 const EMAIL_USERNAME = process.env.EMAIL_USERNAME;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 const SESSION_SECRET = process.env.SESSION_SECRET;
+const GEOCODER_PROVIDER = process.env.GEOCODER_PROVIDER;
 const config = {
     NODE_ENV,
     PORT,
@@ -35,6 +36,7 @@ const config = {
     EMAIL_USERNAME,
     EMAIL_PASSWORD,
     SESSION_SECRET,
+    GEOCODER_PROVIDER,
 };
 const isAllpresent = Object.values(config).every((item) => item !== null);
 if (!isAllpresent) throw new Error(`Missing required file item`);

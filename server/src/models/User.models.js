@@ -15,6 +15,11 @@ const UserSchema = new mongoose.Schema(
             type: String,
             // required: [true, "Password is required"],
         },
+        phone: {
+            type: String,
+            unique: true,
+            trim: true,
+        },
         googleId: {
             type: String,
             unique: true,
@@ -44,7 +49,7 @@ const UserSchema = new mongoose.Schema(
         bio: {
             type: String,
             trim: true,
-            maxlength: 250,
+            maxLength: 250,
             default: "",
         },
         isEmailVerified: {

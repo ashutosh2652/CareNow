@@ -14,6 +14,13 @@ export const registerFormControl = [
     type: "email",
   },
   {
+    name: "phone",
+    label: "Phone",
+    placeholder: "Enter your Phone No.",
+    componentType: "input",
+    type: "tel",
+  },
+  {
     name: "password",
     label: "Password",
     placeholder: "Enter your password",

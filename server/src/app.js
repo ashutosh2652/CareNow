@@ -54,6 +54,18 @@ app.use("/health", (req, res) => {
 
 import Authroutes from "./routes/Auth.routes.js";
 app.use("/api/auth", Authroutes);
+import DoctorRoutes from "./routes/Doctor.routes.js";
+app.use("/api/doctor", DoctorRoutes);
+import AdminRoutes from "./routes/Admin.routes.js";
+app.use("/api/admin", AdminRoutes);
+import AppointmentRoutes from "./routes/Appointment.routes.js";
+app.use("/api/appointment", AppointmentRoutes);
+import PatientRoutes from "./routes/Patient.routes.js";
+app.use("/api/patient", PatientRoutes);
+import PrescriptionRoutes from "./routes/Prescription.routes.js";
+app.use("/api/prescription", PrescriptionRoutes);
+import ReviewRoutes from "./routes/Review.routes.js";
+app.use("/api/review", ReviewRoutes);
 
 app.use((req, res, next) => {
     res.status(400).json(
