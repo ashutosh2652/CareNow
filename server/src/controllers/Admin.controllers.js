@@ -89,6 +89,32 @@ const suspendDoctor = async (req, res, next) => {
         next(new ApiError(500, error.message));
     }
 };
+const suspendUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!req.user || req.user.role !== "admin") {
+            return next(
+                new ApiError(403, "You are not allowed to change this!")
+            );
+        }
+        if (!id) return next(new ApiError(404, "UserId not found!"));
+        const user = await User.findByIdAndUpdate(
+            id,
+            {
+                accountStatus: "banned",
+            },
+            { new: true }
+        );
+        if (!user)
+            return next(new ApiError(404, "No user exist with given userId!"));
+        res.status(200).json(
+            new ApiResponse(200, user, "User details updated successfully!")
+        );
+    } catch (error) {
+        console.log(error);
+        return next(new ApiError(500, error.message));
+    }
+};
 const changeDoctorDetailsForAdmin = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -132,4 +158,9 @@ const changeDoctorDetailsForAdmin = async (req, res, next) => {
         next(new ApiError(500, error.message));
     }
 };
-export { addNewDoctor, suspendDoctor, changeDoctorDetailsForAdmin };
+export {
+    addNewDoctor,
+    suspendDoctor,
+    changeDoctorDetailsForAdmin,
+    suspendUser,
+};

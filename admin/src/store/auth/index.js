@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/axiosInstance";
 import { toast } from "sonner";
+import axios from "axios";
 const initialState = {
   isLoading: false,
   user: null,
@@ -53,7 +54,7 @@ export const getUser = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const response = await api.get("/auth/user");
-      console.log(response, "User!");
+      console.log(response);
 
       return response.data;
     } catch (error) {
@@ -165,7 +166,6 @@ const AuthSlice = createSlice({
         state.isLoading = false;
         toast.dismiss("checkauth-loading");
         state.user = null;
-        state.isAuthenticated = false;
       })
       .addCase(VerifyEmailByToken.pending, (state) => {
         state.isEmailVerifying = true;

@@ -23,12 +23,15 @@ const googleAuthCallback = passport.authenticate("google", {
     session: true,
 });
 const googleCallbackRedirect = (req, res) => {
-    const successRedirectUrl = config.CLIENT_URL_PATIENT + "/";
+    let successRedirectUrl;
+    if (req?.user?.role === "admin")
+        successRedirectUrl = config.CLIENT_URL_ADMIN + "/";
+    else if (req?.user?.role === "doctor")
+        successRedirectUrl = config.CLIENT_URL_DOCTOR + "/";
+    else successRedirectUrl = config.CLIENT_URL_PATIENT + "/";
     res.redirect(successRedirectUrl);
 };
 const getUser = (req, res, next) => {
-    // console.log(req.user, "user");
-
     if (req.user) {
         if (req.user.accountStatus === "active")
             return res
@@ -41,8 +44,6 @@ const getUser = (req, res, next) => {
 };
 const RegisterUser = async (req, res, next) => {
     try {
-        // console.log(req, "body!");
-
         const { email, password, fullName, phone } = req.body;
         if (!email || !password || !fullName)
             return next(new ApiError(400, "Please enter valid details!"));

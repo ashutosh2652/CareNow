@@ -13,12 +13,13 @@ import {
     checkPasswordTokenAndUpdatePassword,
     updateProfilePicture,
 } from "../controllers/Auth.controllers.js";
+import googleError from "../middleware/googleError.middleware.js";
 import upload from "../middleware/multer.middleware.js";
 const router = express.Router();
 router.route("/google").get(googleAuth);
 router
     .route("/google/callback")
-    .get(googleAuthCallback, googleCallbackRedirect);
+    .get(googleAuthCallback, googleError, googleCallbackRedirect);
 router.route("/user").get(getUser);
 router.route("/register").post(RegisterUser);
 router.route("/login").post(LoginUser);

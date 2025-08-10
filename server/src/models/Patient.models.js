@@ -15,12 +15,10 @@ const PatientSchema = new mongoose.Schema(
         height: {
             value: Number,
             unit: { type: String, enum: ["cm", "inch"], default: "cm" },
-            required: true,
         },
         weight: {
             value: Number,
             unit: { type: String, enum: ["kg", "lbs"], default: "kg" },
-            required: true,
         },
         allergies: [{ type: String }],
         medicalHistory: [
@@ -46,7 +44,6 @@ const PatientSchema = new mongoose.Schema(
             name: String,
             relation: String,
             phone: String,
-            required: true,
         },
     },
     { timestamps: true }

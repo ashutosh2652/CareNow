@@ -2,6 +2,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
 import { config } from "./env.js";
 import { User } from "../models/User.models.js";
+import { ApiError } from "../utils/ApiError.js";
 
 export default function (passport) {
     passport.use(

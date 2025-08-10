@@ -1,8 +1,8 @@
-import { Appointment } from "../models/Appointment.models";
-import { Doctor } from "../models/Doctor.models";
-import { Review } from "../models/Review.models";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
+import { Appointment } from "../models/Appointment.models.js";
+import { Doctor } from "../models/Doctor.models.js";
+import { Review } from "../models/Review.models.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const addReview = async (req, res, next) => {
     try {

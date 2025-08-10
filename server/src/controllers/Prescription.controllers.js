@@ -1,8 +1,8 @@
-import { Appointment } from "../models/Appointment.models";
-import { Patient } from "../models/Patient.models";
-import { Prescription } from "../models/Prescription.models";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
+import { Appointment } from "../models/Appointment.models.js";
+import { Patient } from "../models/Patient.models.js";
+import { Prescription } from "../models/Prescription.models.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const AddPresecription = async (req, res, next) => {
     try {
