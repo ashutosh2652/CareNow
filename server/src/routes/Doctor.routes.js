@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.route("/doctor/change-details").patch(changeDoctorDetailsForDoctor);
 router.route("/get-doctor/:id").get(getDoctorDetails);
-router.route("/get").get(getAllDoctor);
+router.route("/get").post(getAllDoctor);
 router.route("/get-nearby-doctors").get(getNearByDoctors);
 router
     .route("/upload-document")

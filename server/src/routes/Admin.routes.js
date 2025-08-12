@@ -4,6 +4,8 @@ import {
     changeDoctorDetailsForAdmin,
     suspendDoctor,
     suspendUser,
+    getAllUser,
+    getPatientDetail,
 } from "../controllers/Admin.controllers.js";
 import VerifyAdmin from "../middleware/VerifyAdmin.middleware.js";
 const router = express.Router();
@@ -14,5 +16,7 @@ router.route("/suspend-user/:id").patch(VerifyAdmin, suspendUser);
 router
     .route("/change-doctor-details/:id")
     .patch(VerifyAdmin, changeDoctorDetailsForAdmin);
+router.route("/user/get").get(getAllUser);
+router.route("/patient/get/:userId").get(VerifyAdmin, getPatientDetail);
 
 export default router;

@@ -16,33 +16,36 @@ import Dashboard from "./pages/Dashboard";
 import Doctors from "./pages/Doctors";
 import Patient from "./pages/Patient";
 import Appointment from "./pages/Appointment";
+import Blogs from "./pages/Blogs";
+import Profile from "./pages/Profile";
+import PatientDetail from "./pages/PatientDetail";
 
 function App() {
   const dispatch = useDispatch();
   const { isAuthenticated, user, isLoading, error } = useSelector(
     (state) => state.auth
   );
-  useEffect(() => {
-    if (error !== null) {
-      toast.error(error);
-      dispatch(ClearError());
-    }
-  }, [error]);
-  useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch]);
-  if (isLoading)
-    return (
-      <div className=" flex flex-col space-y-2 overflow-hidden h-screen p-1">
-        <Skeleton className="min-h-16 w-full rounded" />
-        <div className="flex-1 min-h-[1500px] overflow-hidden">
-          <Skeleton className="w-full h-full rounded" />
-        </div>
-      </div>
-    );
+  // useEffect(() => {
+  //   if (error !== null) {
+  //     toast.error(error);
+  //     dispatch(ClearError());
+  //   }
+  // }, [error]);
+  // useEffect(() => {
+  //   dispatch(getUser());
+  // }, [dispatch]);
+  // if (isLoading)
+  //   return (
+  //     <div className=" flex flex-col space-y-2 overflow-hidden h-screen p-1">
+  //       <Skeleton className="min-h-16 w-full rounded" />
+  //       <div className="flex-1 min-h-[1500px] overflow-hidden">
+  //         <Skeleton className="w-full h-full rounded" />
+  //       </div>
+  //     </div>
+  //   );
 
   return (
-    <div className="flex flex-col bg-gradient-to-br from-neutral-200 to-blue-300">
+    <div className="flex flex-col overflow-hidden bg-gradient-to-br from-neutral-200 to-blue-300">
       <Routes>
         <Route path="/wrong-page" element={<WrongPage />} />
         <Route
@@ -65,12 +68,12 @@ function App() {
         </Route>
         <Route
           path="/admin"
-          errorElement={<ErrorPage />}
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <AdminLayout />
-            </CheckAuth>
+            // <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <AdminLayout />
+            // </CheckAuth>
           }
+          errorElement={<ErrorPage />}
         >
           <Route
             path="dashboard"
@@ -81,7 +84,7 @@ function App() {
             }
           />
           <Route
-            path="doctors"
+            path="doctor"
             element={
               <Suspense fallback={<Loading />}>
                 <Doctors />
@@ -97,10 +100,34 @@ function App() {
             }
           />
           <Route
-            path="appointment"
+            path="appointments"
             element={
               <Suspense fallback={<Loading />}>
                 <Appointment />
+              </Suspense>
+            }
+          />
+          <Route
+            path="patient-detail/:patientId"
+            element={
+              <Suspense fallback={<Loading />}>
+                <PatientDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="blogs"
+            element={
+              <Suspense fallback={<Loading />}>
+                <Blogs />
+              </Suspense>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <Suspense fallback={<Loading />}>
+                <Profile />
               </Suspense>
             }
           />

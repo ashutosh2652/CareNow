@@ -122,6 +122,8 @@ const verifyEmailId = async (req, res, next) => {
     try {
         const { email } = req.body;
         const { token } = req.params;
+        console.log(email, "email", token, "token");
+
         if (!email) return next(new ApiError(400, "Please provide emailId"));
         if (!token)
             return next(

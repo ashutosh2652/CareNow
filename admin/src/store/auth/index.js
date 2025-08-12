@@ -9,22 +9,7 @@ const initialState = {
   error: null,
   isEmailVerifying: true,
 };
-export const RegisterUser = createAsyncThunk(
-  "/auth/register",
-  async ({ email, fullName, password }, thunkApi) => {
-    try {
-      const response = await api.post("/auth/register", {
-        email,
-        fullName,
-        password,
-      });
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      return thunkApi.rejectWithValue(error.response.data.message);
-    }
-  }
-);
+
 export const LoginUser = createAsyncThunk(
   "/auth/login",
   async ({ email, password }, thunkApi) => {
@@ -99,31 +84,7 @@ const AuthSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(RegisterUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-        toast.loading("Creating your Account.", {
-          id: "register-loading",
-        });
-      })
-      .addCase(RegisterUser.fulfilled, (state) => {
-        state.isLoading = false;
-        state.isAuthenticated = false;
-        state.user = null;
-        toast.dismiss("register-loading");
-        toast.success("Account created Successfully!");
-      })
-      .addCase(RegisterUser.rejected, (state, action) => {
-        console.log(action, "action");
 
-        state.isLoading = false;
-        state.isAuthenticated = false;
-        state.user = null;
-        state.error = action.payload
-          ? action.payload.message
-          : action.error.message;
-        toast.dismiss("register-loading");
-      })
       .addCase(LoginUser.pending, (state) => {
         state.error = null;
         state.isLoading = true;
@@ -138,7 +99,7 @@ const AuthSlice = createSlice({
 
         toast.dismiss("logging-loading");
       })
-      .addCase(LoginUser.rejected, (state) => {
+      .addCase(LoginUser.rejected, (state, action) => {
         state.isAuthenticated = false;
         state.isLoading = false;
         state.user = null;

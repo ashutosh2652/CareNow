@@ -18,6 +18,8 @@ const createPatientDetails = async (req, res, next) => {
             height,
             weight,
             allergies,
+            gender,
+            dob,
             currentMedication,
             emergencyContact,
         } = req.body;
@@ -25,6 +27,8 @@ const createPatientDetails = async (req, res, next) => {
             "bloodGroup",
             "height",
             "weight",
+            "gender",
+            "dob",
             "emergencyContact",
         ];
         for (const field of requiredFields) {
@@ -46,6 +50,8 @@ const createPatientDetails = async (req, res, next) => {
             bloodGroup,
             height,
             weight,
+            gender,
+            dob,
             emergencyContact,
             ...requiredfields,
         });

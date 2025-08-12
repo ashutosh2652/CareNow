@@ -98,7 +98,7 @@ function App() {
             }
           />
           <Route
-            path="verify-email/resend"
+            path="resend-email"
             element={
               <CheckAuth isAuthenticated={isAuthenticated} user={user}>
                 <SendVerificationEmailForPatient />

@@ -20,6 +20,13 @@ const PatientSchema = new mongoose.Schema(
             value: Number,
             unit: { type: String, enum: ["kg", "lbs"], default: "kg" },
         },
+        gender: {
+            type: String,
+            enum: ["male", "female", "other"],
+        },
+        dob: {
+            type: Date,
+        },
         allergies: [{ type: String }],
         medicalHistory: [
             {

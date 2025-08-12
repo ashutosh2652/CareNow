@@ -3,6 +3,7 @@ import { User } from "../models/User.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import getgeoencode from "../services/geoencoder-address-encoding.services.js";
+import { Patient } from "../models/Patient.models.js";
 
 const addNewDoctor = async (req, res, next) => {
     try {
@@ -158,9 +159,47 @@ const changeDoctorDetailsForAdmin = async (req, res, next) => {
         next(new ApiError(500, error.message));
     }
 };
+const getAllUser = async (_, res, next) => {
+    try {
+        const allUser = await User.find({});
+        res.status(200).json(
+            new ApiResponse(200, allUser, "All User deta fetched successfully!")
+        );
+    } catch (error) {
+        console.log(error);
+        return next(new ApiError(500, error.message));
+    }
+};
+const getPatientDetail = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+        const patientDetail = await Patient.findOne({ user: userId }).populate({
+            path: "medicalHistory.doctor",
+            populate: {
+                path: "user",
+                select: "fullName email phone -_id",
+            },
+            select: "user consultationFee experienceInYears qualifications specializations",
+        });
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    patientDetail,
+                    "Patient Detail fetched successfully!"
+                )
+            );
+    } catch (error) {
+        console.log(error);
+        return next(new ApiError(500, error.message));
+    }
+};
 export {
     addNewDoctor,
     suspendDoctor,
     changeDoctorDetailsForAdmin,
     suspendUser,
+    getAllUser,
+    getPatientDetail,
 };

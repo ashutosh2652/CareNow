@@ -19,6 +19,8 @@ function Register() {
   const navigate = useNavigate();
   function onSubmit(event) {
     event.preventDefault();
+    console.log(formData, "formaData");
+
     dispatch(RegisterUser({ ...formData })).then((data) => {
       // console.log(data, "data");
 
@@ -32,9 +34,9 @@ function Register() {
   useEffect(() => {
     if (user && !user.isEmailVerified) {
       if (user.role === "patient") {
-        navigate("/patient/verify-email/resend");
+        navigate("/patient/resend-email");
       } else if (user.role === "doctor") {
-        navigate("/doctor/verify-email/resend");
+        navigate("/doctor/resend-email");
       }
     }
   }, [user, dispatch]);

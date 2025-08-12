@@ -137,7 +137,7 @@ const AuthSlice = createSlice({
 
         toast.dismiss("logging-loading");
       })
-      .addCase(LoginUser.rejected, (state) => {
+      .addCase(LoginUser.rejected, (state, action) => {
         state.isAuthenticated = false;
         state.isLoading = false;
         state.user = null;

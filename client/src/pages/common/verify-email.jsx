@@ -6,6 +6,8 @@ import { VerifyEmailByToken } from "../../store/auth";
 
 function VerifyEmail() {
   const { token } = useParams();
+  console.log(token, "yoken");
+
   const { isEmailVerifying, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();

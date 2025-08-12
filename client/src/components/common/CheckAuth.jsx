@@ -2,6 +2,8 @@ import { Navigate, useLocation } from "react-router-dom";
 
 function CheckAuth({ isAuthenticated, children, user }) {
   const location = useLocation();
+  if (isAuthenticated == null || isAuthenticated == undefined)
+    return <div>Loading...</div>;
 
   if (
     !isAuthenticated &&
@@ -10,17 +12,15 @@ function CheckAuth({ isAuthenticated, children, user }) {
       location.pathname.includes("/register")
     )
   ) {
-    return <Navigate to={"/auth/login"} />;
+    <Navigate to={"/auth/login"} />;
   }
   if (isAuthenticated && user && !user.isEmailVerified) {
     if (location.pathname.includes("/verify-email")) return <>{children}</>;
     else {
       if (user.role === "patient") {
-        return <Navigate to={"/patient/verify-email/resend"} />;
+        <Navigate to={"/patient/resend-email"} />;
       } else if (user.role === "doctor") {
-        return <Navigate to={"/doctor/verify-email/resend"} />;
-      } else {
-        return <Navigate to={""} />;
+        <Navigate to={"/doctor/resend-email"} />;
       }
     }
   }
