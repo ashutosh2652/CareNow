@@ -53,13 +53,10 @@ const PatientSlice = createSlice({
       })
       .addCase(getAllUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log(action.payload, "payload");
 
         state.AllUser = action.payload.data;
       })
-      .addCase(getAllUser.rejected, (state, action) => {
-        console.log(action, "action");
-
+      .addCase(getAllUser.rejected, (state) => {
         state.isLoading = false;
       })
       .addCase(getPatientDetail.pending, (state) => {

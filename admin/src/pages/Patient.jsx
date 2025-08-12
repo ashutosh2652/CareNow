@@ -27,7 +27,6 @@ import {
 import { Button } from "../components/ui/button";
 import {
   Table,
-  TableBody,
   TableCell,
   TableHead,
   TableHeader,
@@ -44,9 +43,7 @@ function Patient() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    dispatch(getAllUser()).then((data) => {
-      console.log(data);
-    });
+    dispatch(getAllUser());
   }, [dispatch]);
 
   const filteredUsers = useMemo(() => {
@@ -62,7 +59,6 @@ function Patient() {
           user.email.toLowerCase().includes(searchQuery.toLowerCase())
       );
   }, [AllUser, filter, searchQuery]);
-  console.log(AllUser, "jgvhgv");
 
   function ExportCsv() {
     if (filteredUsers.length === 0) {
