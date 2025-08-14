@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react"; // 1. Import useState
 import { Input } from "../ui/input";
 import {
   Select,
@@ -10,12 +10,20 @@ import {
 } from "../ui/select";
 import { Label } from "../ui/label";
 import { Trash2, XIcon } from "lucide-react";
-import { ALL_SPECIALIZATIONS } from "../../config";
+import { ALL_SPECIALIZATIONS, specializations_control } from "../../config";
 import { Button } from "../ui/button";
+import AddressAutocomplete from "./AddressAutoComplete";
 
 const initialState = { degree: "", institution: "", year: "" };
 
-export default function AddDoctorForm({ onSubmit, formData, setformData }) {
+export default function AddDoctorForm({
+  onSubmit,
+  formData,
+  setformData,
+  edit,
+}) {
+  const [selectedPlace, setSelectedPlace] = useState(null);
+
   useEffect(() => {
     const id = "add-doctor-form-scrollbar-styles";
     if (document.getElementById(id)) return;
@@ -30,20 +38,38 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
     `;
     document.head.appendChild(style);
   }, []);
+  useEffect(() => {
+    if (selectedPlace) {
+      setformdata_safe((prev) => ({
+        ...prev,
+        clinicInfo: {
+          ...prev.clinicInfo,
+          address: selectedPlace.formatted,
+          location: {
+            type: "Point",
+            coordinates: [selectedPlace.lon, selectedPlace.lat],
+          },
+        },
+      }));
+    }
+  }, [selectedPlace]);
+  // console.log(selectedPlace, "selected");
 
   const availableOptions = ALL_SPECIALIZATIONS.filter(
-    (option) => !formData.specializations.some((s) => s.id === option.id)
+    (option) => !formData.specializations.some((s) => s === option.id)
   );
-
   const addedqualification = formData.qualifications.slice(
     0,
     Math.max(0, formData.qualifications.length - 1)
   );
 
   const handleSelect = (specializationId) => {
-    const itemToAdd = ALL_SPECIALIZATIONS.find(
+    const itemObject = ALL_SPECIALIZATIONS.find(
       (s) => s.id === specializationId
     );
+    const itemToAdd = itemObject.id;
+    console.log(itemToAdd, "itemToAdd");
+
     if (itemToAdd) {
       setformdata_safe((prev) => ({
         ...prev,
@@ -51,12 +77,15 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
       }));
     }
   };
+  const handleAccountstatus = (status) => {
+    setformdata_safe((prev) => ({ ...prev, status }));
+  };
 
   const handleDelete = (specializationId) => {
     setformdata_safe((prev) => ({
       ...prev,
       specializations: prev.specializations.filter(
-        (item) => item.id !== specializationId
+        (item) => item != specializationId
       ),
     }));
   };
@@ -95,6 +124,7 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
       return { ...prev, qualifications: newQualifications };
     });
   };
+  console.log(formData, "formdata");
 
   return (
     <form
@@ -103,7 +133,9 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
     >
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-800">Add Doctor</h3>
+        <h3 className="text-lg font-semibold text-gray-800">
+          {edit ? "Edit" : "Add"} Doctor
+        </h3>
       </div>
 
       {/* Email */}
@@ -113,7 +145,8 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
           type="email"
           placeholder="Enter doctor's email"
           className="ring-0 focus:ring-2 focus:ring-indigo-300 text-black"
-          value={formData.email}
+          value={edit ? formData.user.email : formData.email}
+          disabled={edit}
           onChange={(e) =>
             setformdata_safe((prev) => ({ ...prev, email: e.target.value }))
           }
@@ -143,18 +176,36 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
         <div className="flex flex-wrap gap-2 mt-2">
           {formData.specializations.map((specialization) => (
             <div
-              key={specialization.id}
+              key={specialization}
               className="flex items-center gap-2 bg-indigo-50 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full shadow-sm"
             >
-              <span>{specialization.label}</span>
+              <span>{specializations_control[specialization]}</span>
               <XIcon
                 className="h-4 w-4 cursor-pointer hover:text-red-500 transition"
-                onClick={() => handleDelete(specialization.id)}
+                onClick={() => handleDelete(specialization)}
               />
             </div>
           ))}
         </div>
       </div>
+      {edit ? (
+        <div>
+          <Label className="text-sm text-gray-700">Change Account Status</Label>
+          <Select onValueChange={handleAccountstatus} value={formData.status}>
+            <SelectTrigger className="ring-0 focus:ring-2 focus:ring-indigo-300">
+              <SelectValue placeholder="Change Status">
+                <span className="text-black">Change Status</span>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="approved">Approved</SelectItem>
+                <SelectItem value="suspended">Susspended</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      ) : null}
 
       {/* Qualifications  */}
       <div className="flex flex-col gap-3">
@@ -191,7 +242,7 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
           </div>
         )}
 
-        {/*  qualification  */}
+        {/* qualification  */}
         <div className="flex flex-wrap gap-3">
           <Input
             type="text"
@@ -250,8 +301,10 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
       </div>
 
       {/* Clinic Info */}
-      <div className="flex flex-col gap-2">
-        <Label className="text-sm text-gray-700">Clinic Information</Label>
+      <div className="flex flex-col gap-3">
+        <h4 className="text-sm text-gray-700 font-medium">
+          Clinic Information
+        </h4>
         <Input
           placeholder="Enter name of clinic"
           value={formData.clinicInfo.name}
@@ -263,17 +316,15 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
           }
           className="ring-0 focus:ring-2 focus:ring-indigo-300 text-black"
         />
-        <Input
-          placeholder="Enter address of clinic"
-          value={formData.clinicInfo.address}
-          onChange={(event) =>
-            setformdata_safe((prev) => ({
-              ...prev,
-              clinicInfo: { ...prev.clinicInfo, address: event.target.value },
-            }))
-          }
-          className="ring-0 focus:ring-2 focus:ring-indigo-300 text-black"
-        />
+
+        <AddressAutocomplete onPlaceSelected={setSelectedPlace} />
+
+        {formData.clinicInfo.address && (
+          <div className="p-2 bg-gray-50 border rounded-md text-sm text-gray-600">
+            <span className="font-semibold">Selected Address:</span>{" "}
+            {formData.clinicInfo.address}
+          </div>
+        )}
       </div>
 
       {/* Submit */}
@@ -282,7 +333,7 @@ export default function AddDoctorForm({ onSubmit, formData, setformData }) {
           type="submit"
           className="w-full bg-emerald-500 hover:bg-emerald-600 text-white"
         >
-          Add Doctor
+          {edit ? "Update Detail" : "Add Doctor"}
         </Button>
       </div>
     </form>

@@ -2,8 +2,9 @@ import { ApiError } from "../utils/ApiError.js";
 
 export default function (req, _, next) {
     try {
-        console.log(!req.user, "user");
-        console.log(req.user.role !== "admin");
+        // console.log(!req.user, "user");
+        // console.log(req.user.role !== "admin");
+        console.log(req.user);
 
         if (!req.user || req.user.role !== "admin")
             return next(

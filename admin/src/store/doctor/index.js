@@ -42,7 +42,7 @@ export const changeDoctorDetail = createAsyncThunk(
   "/admin/change-doctor-detail",
   async (
     {
-      id,
+      _id,
       specializations,
       qualifications,
       experienceInYears,
@@ -52,7 +52,7 @@ export const changeDoctorDetail = createAsyncThunk(
     thunkApi
   ) => {
     try {
-      const response = await api.patch(`/admin/change-doctor-details/${id}`, {
+      const response = await api.patch(`/admin/change-doctor-details/${_id}`, {
         specializations,
         qualifications,
         experienceInYears,

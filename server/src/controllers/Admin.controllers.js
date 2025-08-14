@@ -2,7 +2,6 @@ import { Doctor } from "../models/Doctor.models.js";
 import { User } from "../models/User.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import getgeoencode from "../services/geoencoder-address-encoding.services.js";
 import { Patient } from "../models/Patient.models.js";
 
 const addNewDoctor = async (req, res, next) => {
@@ -14,7 +13,7 @@ const addNewDoctor = async (req, res, next) => {
             experienceInYears,
             clinicInfo,
         } = req.body;
-        if (!req.user || req.user !== "admin")
+        if (!req.user || req.user.role !== "admin")
             return next(
                 new ApiError(401, "You are not authorized to add new doctor!")
             );
@@ -36,8 +35,6 @@ const addNewDoctor = async (req, res, next) => {
             return next(
                 new ApiError(409, "Doctor with this email already exists!")
             );
-        const coordinates = await getgeoencode(clinicInfo?.address);
-        clinicInfo.location = { type: "Point", coordinates };
         const doctor = await Doctor.create({
             user: user._id,
             specializations,
@@ -137,8 +134,6 @@ const changeDoctorDetailsForAdmin = async (req, res, next) => {
             return next(new ApiError(400, "Please provide experience!"));
         if (!clinicInfo)
             return next(new ApiError(400, "Please provide clinic Info!"));
-        const coordinates = await getgeoencode(clinicInfo?.address);
-        clinicInfo.location = { type: "Point", coordinates };
         const doctor = await Doctor.findByIdAndUpdate(
             id,
             {

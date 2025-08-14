@@ -38,3 +38,33 @@ export const ALL_SPECIALIZATIONS = [
   { id: "anesthesiology", label: "Anesthesiology" },
   { id: "radiology", label: "Radiology" },
 ];
+export const specializations_control = {
+  pediatrics: "Pediatrics",
+  cardiology: "Cardiology",
+  dermatology: "Dermatology",
+  gastroenterology: "Gastroenterology",
+  endocrinology: "Endocrinology",
+  neurology: "Neurology",
+  oncology: "Oncology",
+  pulmonology: "Pulmonology",
+  "orthopedic-surgery": "Orthopedic Surgery",
+  ophthalmology: "Ophthalmology",
+  "otolaryngology-ent": "Otolaryngology (ENT)",
+  "obstetrics-gynecology-obgyn": "Obstetrics and Gynecology (OB/GYN)",
+  psychiatry: "Psychiatry",
+  urology: "Urology",
+  nephrology: "Nephrology",
+  "general-surgery": "General Surgery",
+  anesthesiology: "Anesthesiology",
+  radiology: "Radiology",
+};
+
+export const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+};
+
+export const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { y: 0, opacity: 1 },
+};

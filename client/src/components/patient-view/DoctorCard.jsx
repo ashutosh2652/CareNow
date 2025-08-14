@@ -31,39 +31,28 @@ const StarRating = ({ rating = 0, totalStars = 5 }) => {
   );
 };
 
-function DoctorCard({
-  doctor,
-  SuspendCurrentDoctor,
-  seteditable,
-  setformData,
-  setopensheet,
-}) {
-  function handleeditdetails() {
-    seteditable(true);
-    setformData(doctor);
-    setopensheet(true);
-  }
+function DoctorCard({ doctor }) {
   return (
     <div className="flex w-full max-w-sm min-w-[250px] flex-col rounded-xl border bg-card text-card-foreground shadow-lg transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-2xl">
       {/* --- Card Header: Avatar and Main Info --- */}
       <div className="flex items-center gap-4 p-6">
         <Avatar className="h-24 w-24 border-2 border-primary/20">
           <AvatarImage
-            src={doctor.user.avatar.url}
-            alt={doctor.user.fullName}
+            src={doctor?.user.avatar.url}
+            alt={doctor?.user.fullName}
           />
           <AvatarFallback className="text-3xl font-semibold">
-            {doctor.user.fullName}
+            {doctor?.user.fullName}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold tracking-tight">
-            {doctor.user.fullName}
+            {doctor?.user.fullName}
           </h2>
         </div>
       </div>
       <div className=" text-center mb-2">
-        {doctor.specializations.join(" , ")}
+        {doctor?.specializations.join(" , ")}
       </div>
 
       <hr />
@@ -72,9 +61,9 @@ function DoctorCard({
         <div className="flex flex-col items-center gap-1.5">
           <div className="flex items-end gap-2">
             <span className="text-2xl font-bold leading-none">
-              {doctor.averageRating.toFixed(1)}
+              {doctor?.averageRating.toFixed(1)}
             </span>
-            <StarRating rating={doctor.averageRating} />
+            <StarRating rating={doctor?.averageRating} />
           </div>
           <span className="text-sm text-muted-foreground">Rating</span>
         </div>
@@ -82,30 +71,10 @@ function DoctorCard({
         <div className="flex flex-col items-center gap-1">
           <span className="text-xl font-bold flex items-center gap-1.5">
             <BriefcaseMedical className="h-5 w-5 text-primary" />
-            {doctor.experienceInYears}+
+            {doctor?.experienceInYears}+
           </span>
           <span className="text-sm text-muted-foreground">Years Exp.</span>
         </div>
-      </div>
-
-      <div className="flex gap-3 justify-between h-full items-end p-4">
-        <Button
-          className=" text-base font-semibold bg-red-400 hover:bg-red-600 cursor-pointer"
-          size="lg"
-          onClick={() => SuspendCurrentDoctor(doctor._id)}
-          disabled={doctor.status === "suspended"}
-        >
-          Suspend Doctor
-        </Button>
-        <Button
-          className={
-            "text-base font-semibold bg-violet-400 cursor-pointer hover:bg-violet-600"
-          }
-          size={"lg"}
-          onClick={handleeditdetails}
-        >
-          Edit details
-        </Button>
       </div>
     </div>
   );

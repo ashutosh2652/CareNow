@@ -3,7 +3,7 @@ import { StatCard } from "../components/Admin/StatCard";
 import { motion } from "framer-motion";
 import { Users, HeartPulse, UserCheck, UserX } from "lucide-react";
 import { Button } from "../components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "../components/ui/dialog";
 import DoctorDialog from "../components/Admin/DoctorDialog";
 import {
@@ -13,6 +13,15 @@ import {
   SheetTitle,
 } from "../components/ui/sheet";
 import AddDoctorForm from "../components/Admin/Add-Doctor-Form";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addDoctor,
+  changeDoctorDetail,
+  getAllDoctor,
+  suspendDoctor,
+} from "../store/doctor";
+import { toast } from "sonner";
+import { containerVariants, itemVariants } from "../config";
 const initialState = {
   email: "",
   specializations: [],
@@ -21,64 +30,78 @@ const initialState = {
   clinicInfo: {
     name: "",
     address: "",
+    location: {
+      type: "Point",
+      coordinates: [],
+    },
   },
 };
 function Doctors() {
   const [opendialog, setopendialog] = useState(false);
   const [opensheet, setopensheet] = useState(false);
   const [formData, setformData] = useState(initialState);
+  const [editable, seteditable] = useState(false);
+  const dispatch = useDispatch();
+  const { DoctorList } = useSelector((state) => state.doctor);
+  console.log(DoctorList, "doctorlist");
+  useEffect(() => {
+    dispatch(getAllDoctor({}));
+  }, [dispatch]);
+
   const statsData = [
     {
-      title: "Total Users",
-      // value: AllUser?.length,
+      title: "Total Doctors",
+      value: DoctorList?.length,
       Icon: Users,
       color: "#3b82f6",
     },
     {
-      title: "Total Patients",
-      // value: AllUser?.length,
-      Icon: HeartPulse,
-      color: "#22c55e",
-    },
-    {
-      title: "Active Patients",
-      // value: AllUser?.filter((u) => u.accountStatus === "active").length,
+      title: "Active Doctors",
+      value: DoctorList?.filter((u) => u.status === "approved").length,
       Icon: UserCheck,
-      color: "#f97316",
+      color: "#4f5",
     },
     {
-      title: "Blocked Patients",
-      // value: AllUser?.filter((u) => u.accountStatus === "banned").length,
+      title: "Blocked Doctors",
+      value: DoctorList?.filter((u) => u.status === "suspended").length,
       Icon: UserX,
       color: "#ef4444",
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
-  };
-
-  const doctorData = {
-    fullName: "Dr. Vikram Rao",
-    specializations: [
-      "Neurologist",
-      "Neurologist",
-      "Neurologist",
-      "Neurologist",
-    ],
-    averageRating: 3,
-    experienceInYears: 15,
-    imageUrl: "https://i.pravatar.cc/150?img=68", // Example image
-  };
   function onSubmit(event) {
     event.preventDefault();
+
+    {
+      editable
+        ? dispatch(changeDoctorDetail(formData)).then((data) => {
+            if (data.payload?.success) {
+              setopensheet(false);
+              dispatch(getAllDoctor({}));
+              toast.success("Details uploaded successfully!");
+              seteditable(false);
+              setformData(initialState);
+            }
+          })
+        : dispatch(addDoctor(formData)).then((data) => {
+            if (data.payload?.success) {
+              setopensheet(false);
+              setformData(initialState);
+              dispatch(getAllDoctor({}));
+              toast.success("Doctor added successfully");
+            }
+          });
+    }
   }
+  function SuspendCurrentDoctor(doctorId) {
+    dispatch(suspendDoctor(doctorId)).then((data) => {
+      if (data.payload?.success) {
+        dispatch(getAllDoctor({}));
+        toast.success("Doctor banned!");
+      }
+    });
+  }
+
   return (
     <>
       <Sheet
@@ -86,18 +109,22 @@ function Doctors() {
         onOpenChange={() => {
           setopensheet(false);
           setformData(initialState);
+          seteditable(false);
         }}
       >
         <SheetContent side="right" className={" bg-white"}>
           <SheetHeader>
             <SheetTitle>
-              <p className="text-2xl font-bold p-0">Add New Doctor</p>
+              <p className="text-2xl font-bold p-0">
+                {editable ? "Edit" : "Add New"} Doctor
+              </p>
             </SheetTitle>
           </SheetHeader>
           <AddDoctorForm
             onSubmit={onSubmit}
             formData={formData}
             setformData={setformData}
+            edit={editable}
           />
         </SheetContent>
       </Sheet>
@@ -126,8 +153,21 @@ function Doctors() {
             Add Doctor
           </Button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-3">
-          <DoctorCard doctor={doctorData} />
+        <div className="flex gap-4 flex-wrap">
+          {DoctorList && DoctorList.length > 0 ? (
+            DoctorList.map((doctor) => (
+              <DoctorCard
+                key={doctor._id}
+                doctor={doctor}
+                SuspendCurrentDoctor={SuspendCurrentDoctor}
+                seteditable={seteditable}
+                setformData={setformData}
+                setopensheet={setopensheet}
+              />
+            ))
+          ) : (
+            <h1 className="text-5xl mt-3 font-extrabold">NO DOCTOR FOUND!</h1>
+          )}
         </div>
         <Dialog open={opendialog} onOpenChange={setopendialog}>
           <DoctorDialog />

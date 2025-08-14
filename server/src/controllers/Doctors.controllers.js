@@ -2,7 +2,6 @@ import { Doctor } from "../models/Doctor.models.js";
 import { User } from "../models/User.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import getgeoencode from "../services/geoencoder-address-encoding.services.js";
 import { uploadImageToCloudinary } from "../services/fileStorage.services.js";
 
 const changeDoctorDetailsForDoctor = async (req, res, next) => {
@@ -31,8 +30,6 @@ const changeDoctorDetailsForDoctor = async (req, res, next) => {
             updateFields.experienceInYears = experienceInYears;
         if (clinicInfo) {
             updateFields.clinicInfo = clinicInfo;
-            const coordinates = await getgeoencode(clinicInfo?.address);
-            updateFields.clinicInfo.location = { type: "Point", coordinates };
         }
         if (!Array.isArray(documents))
             return next(new ApiError(400, "Please provide documents!"));

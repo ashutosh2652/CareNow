@@ -23,6 +23,7 @@ import Profile from "./pages/patient/profile";
 import VerifyEmail from "./pages/common/verify-email";
 import SendVerificationEmailForPatient from "./pages/patient/SendVerificationEmail";
 import WrongView from "./pages/common/WrongView";
+import Doctors from "./pages/patient/doctors";
 
 function App() {
   const dispatch = useDispatch();
@@ -135,6 +136,14 @@ function App() {
             element={
               <Suspense fallback={<Loading />}>
                 <AboutUs />
+              </Suspense>
+            }
+          />
+          <Route
+            path="doctor"
+            element={
+              <Suspense fallback={<Loading />}>
+                <Doctors />
               </Suspense>
             }
           />
