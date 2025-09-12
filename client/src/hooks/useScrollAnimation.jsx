@@ -1,29 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 
 export const useScrollAnimation = () => {
-	const [animatedElements, setAnimatedElements] = useState(new Set());
-	const observer = useRef();
+	const [visibleElements, setVisibleElements] = useState(new Set());
 
 	useEffect(() => {
-		observer.current = new IntersectionObserver(
+		const observer = new IntersectionObserver(
 			entries => {
 				entries.forEach(entry => {
 					if (entry.isIntersecting) {
-						setAnimatedElements(prev =>
-							new Set(prev).add(entry.target)
+						setVisibleElements(
+							prev => new Set(prev.add(entry.target))
 						);
-						observer.current.unobserve(entry.target);
 					}
 				});
 			},
-			{ threshold: 0.1 }
+			{ threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
 		);
 
 		const elements = document.querySelectorAll(".animate-on-scroll");
-		elements.forEach(el => observer.current.observe(el));
+		elements.forEach(el => observer.observe(el));
 
-		return () => observer.current.disconnect();
+		return () => observer.disconnect();
 	}, []);
 
-	return animatedElements;
+	return visibleElements;
 };
