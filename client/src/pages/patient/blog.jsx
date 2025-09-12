@@ -1,4 +1,7 @@
-import React from "react";
+import { useState } from "react";
+import { PostDetail } from "../../components/patient-view/PostDetail";
+import { BlogCard } from "../../components/patient-view/BlogCard";
+import { useScrollAnimation } from "../../hooks/useScrollAnimation";
 const blogPosts = [
 	{
 		id: 1,
@@ -63,132 +66,9 @@ const blogPosts = [
 	},
 ];
 
-const useScrollAnimation = () => {
-	const [animatedElements, setAnimatedElements] = React.useState(new Set());
-	const observer = React.useRef();
-
-	React.useEffect(() => {
-		observer.current = new IntersectionObserver(
-			entries => {
-				entries.forEach(entry => {
-					if (entry.isIntersecting) {
-						setAnimatedElements(prev =>
-							new Set(prev).add(entry.target)
-						);
-						observer.current.unobserve(entry.target);
-					}
-				});
-			},
-			{ threshold: 0.1 }
-		);
-
-		const elements = document.querySelectorAll(".animate-on-scroll");
-		elements.forEach(el => observer.current.observe(el));
-
-		return () => observer.current.disconnect();
-	}, []);
-
-	return animatedElements;
-};
-
-const BlogCard = ({ post, onCardClick, isAnimated }) => {
-	const cardClass = isAnimated ? "is-visible" : "";
-
-	return (
-		<div
-			className={`animate-on-scroll ${cardClass} cursor-pointer group`}
-			onClick={() => onCardClick(post)}
-		>
-			<div className='bg-slate-800/60 rounded-xl overflow-hidden shadow-lg border border-slate-700 transition-all duration-300 hover:border-blue-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/50 backdrop-blur-sm'>
-				<div className='overflow-hidden'>
-					<img
-						src={post.imageUrl}
-						alt={post.title}
-						className='h-56 w-full object-cover transition-transform duration-500 group-hover:scale-105'
-					/>
-				</div>
-				<div className='p-6'>
-					<p className='text-blue-400 text-xs font-semibold mb-2 tracking-widest uppercase'>
-						{post.category}
-					</p>
-					<h3 className='text-xl font-bold text-white mb-3 h-14 group-hover:text-blue-400 transition-colors duration-300'>
-						{post.title}
-					</h3>
-					<p className='text-gray-400 text-sm mb-4 h-20'>
-						{post.excerpt}
-					</p>
-					<div className='flex items-center text-gray-500 text-xs pt-4 border-t border-slate-700'>
-						<img
-							src={post.authorImage}
-							alt={post.author}
-							className='w-8 h-8 rounded-full mr-3 object-cover'
-						/>
-						<div>
-							<span className='text-white font-semibold'>
-								{post.author}
-							</span>
-							<p>{post.date}</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-};
-
-const PostDetail = ({ post, onGoBack }) => (
-	<div className='container mx-auto px-6 py-24 md:py-32 animate-fade-in'>
-		<button
-			onClick={onGoBack}
-			className='mb-8 text-blue-400 hover:text-blue-300 transition-colors duration-300 flex items-center'
-		>
-			<svg
-				xmlns='http://www.w3.org/2000/svg'
-				className='h-5 w-5 mr-2'
-				viewBox='0 0 20 20'
-				fill='currentColor'
-			>
-				<path
-					fillRule='evenodd'
-					d='M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z'
-					clipRule='evenodd'
-				/>
-			</svg>
-			Back to All Articles
-		</button>
-		<div className='max-w-4xl mx-auto'>
-			<p className='text-blue-400 text-sm font-semibold mb-2 tracking-widest uppercase'>
-				{post.category}
-			</p>
-			<h1 className='text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight'>
-				{post.title}
-			</h1>
-			<div className='flex items-center text-gray-400 mb-8'>
-				<img
-					src={post.authorImage}
-					alt={post.author}
-					className='w-12 h-12 rounded-full mr-4 object-cover'
-				/>
-				<div>
-					<p className='font-bold text-white'>{post.author}</p>
-					<p>{post.date}</p>
-				</div>
-			</div>
-			<img
-				src={post.imageUrl}
-				alt={post.title}
-				className='w-full h-auto max-h-[500px] object-cover rounded-xl mb-8 shadow-2xl'
-			/>
-			<div className='prose prose-invert prose-lg max-w-none text-gray-300 prose-p:text-gray-300 prose-headings:text-white'>
-				<p>{post.fullContent}</p>
-			</div>
-		</div>
-	</div>
-);
-
 export default function Blog() {
 	const animatedElements = useScrollAnimation();
-	const [selectedPost, setSelectedPost] = React.useState(null);
+	const [selectedPost, setSelectedPost] = useState(null);
 
 	const handleCardClick = post => {
 		setSelectedPost(post);
