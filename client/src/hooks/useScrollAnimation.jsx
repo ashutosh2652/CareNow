@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const useScrollAnimation = () => {
 	const [animatedElements, setAnimatedElements] = useState(new Set());
 	const observer = useRef();
 
-	React.useEffect(() => {
+	useEffect(() => {
 		observer.current = new IntersectionObserver(
 			entries => {
 				entries.forEach(entry => {
