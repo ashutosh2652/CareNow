@@ -58,17 +58,6 @@ const Contact = () => {
 			<div className='relative z-10 container mx-auto px-4 py-16 sm:py-24 lg:px-8 font-sans text-white antialiased'>
 				{/* Header Section */}
 				<div className='text-center mb-16 animate-fade-in-up'>
-					<div className='inline-flex items-center gap-2 mb-4 px-4 py-2 bg-purple-500/10 backdrop-blur-sm rounded-full border border-purple-400/20'>
-						<Sparkles className='w-4 h-4 text-purple-400 animate-pulse' />
-						<span className='text-sm text-purple-300'>
-							Get in Touch
-						</span>
-						<Sparkles
-							className='w-4 h-4 text-purple-400 animate-pulse'
-							style={{ animationDelay: "0.5s" }}
-						/>
-					</div>
-
 					<h1 className='text-5xl sm:text-7xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 animate-gradient-x mb-6'>
 						Let's Connect
 					</h1>
