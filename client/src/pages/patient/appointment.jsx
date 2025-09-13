@@ -261,7 +261,7 @@ export default function Appointment() {
 					</div>
 
 					{/* Search and Filters */}
-					<div className='mb-8 space-y-4 animate-in slide-in-from-left duration-1000 delay-200'>
+					<div className='mb-8 space-y-4'>
 						<div className='flex flex-col lg:flex-row gap-4'>
 							{/* Enhanced Search Bar */}
 							<div className='relative flex-1 group mt-3'>

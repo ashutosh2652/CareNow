@@ -39,15 +39,15 @@ function App() {
 	useEffect(() => {
 		dispatch(getUser());
 	}, [dispatch]);
-	if (isLoading)
-		return (
-			<div className=' flex flex-col space-y-2 overflow-hidden h-screen p-1'>
-				<Skeleton className='min-h-16 w-full rounded' />
-				<div className='flex-1 min-h-[1500px] overflow-hidden'>
-					<Skeleton className='w-full h-full rounded' />
-				</div>
-			</div>
-		);
+	// if (isLoading)
+	// 	return (
+	// 		<div className=' flex flex-col space-y-2 overflow-hidden h-screen p-1'>
+	// 			<Skeleton className='min-h-16 w-full rounded' />
+	// 			<div className='flex-1 min-h-[1500px] overflow-hidden'>
+	// 				<Skeleton className='w-full h-full rounded' />
+	// 			</div>
+	// 		</div>
+	// 	);
 
 	return (
 		<div className='flex flex-col bg-gradient-to-br from-neutral-200 to-blue-300'>
