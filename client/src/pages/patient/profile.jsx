@@ -151,25 +151,21 @@ const PatientProfile = () => {
 					initial={{ opacity: 0, y: -30 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.8, ease: "easeOut" }}
-					className='text-center mb-16'
+					className='text-center mb-3 flex justify-center gap-10'
 				>
 					<div className='inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-violet-500 to-purple-600 rounded-3xl mb-6 shadow-2xl'>
 						<span className='text-3xl'>👩‍⚕️</span>
 					</div>
-					<h1 className='text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent mb-4'>
-						Patient Profile
+					<h1 className='text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent mb-1'>
+						Edit Your Profile
 					</h1>
-					<p className='text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed'>
-						Secure, comprehensive management of your personal and
-						medical information
-					</p>
 				</motion.div>
 
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6, delay: 0.2 }}
-					className='flex justify-center mb-12'
+					className='flex justify-end mb-5'
 				>
 					<div className='flex space-x-4'>
 						{isEditing ? (
