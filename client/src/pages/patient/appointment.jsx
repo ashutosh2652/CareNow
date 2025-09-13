@@ -16,6 +16,7 @@ import {
 	Users,
 	TrendingUp,
 } from "lucide-react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 // Temporary data for appointments with doctor photos
 const appointmentsData = [
@@ -130,6 +131,7 @@ export default function Appointment() {
 	const [filterStatus, setFilterStatus] = useState("");
 	const [showStatusFilter, setShowStatusFilter] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		// Simulate loading
@@ -153,6 +155,8 @@ export default function Appointment() {
 
 	const handleViewDetails = appointmentId => {
 		console.log("View details for appointment:", appointmentId);
+		navigate(`/patient/my-appointment/${appointmentId}`);
+		return;
 	};
 
 	if (isLoading) {
@@ -260,7 +264,7 @@ export default function Appointment() {
 					<div className='mb-8 space-y-4 animate-in slide-in-from-left duration-1000 delay-200'>
 						<div className='flex flex-col lg:flex-row gap-4'>
 							{/* Enhanced Search Bar */}
-							<div className='relative flex-1 group'>
+							<div className='relative flex-1 group mt-3'>
 								<div className='absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200'></div>
 								<div className='relative'>
 									<Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-blue-400 transition-colors duration-300' />
@@ -277,89 +281,91 @@ export default function Appointment() {
 							</div>
 
 							{/* Enhanced Date Filter */}
-							<div className='relative group'>
-								<div className='absolute -inset-1 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200'></div>
-								<div className='relative'>
-									<Calendar className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-green-400 transition-colors duration-300' />
-									<input
-										type='date'
-										value={filterDate}
-										onChange={e =>
-											setFilterDate(e.target.value)
-										}
-										className='bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-xl pl-12 pr-4 py-4 text-white focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-gray-900/90'
-									/>
-								</div>
-							</div>
-
-							{/* Enhanced Status Filter */}
-							<div className='relative group'>
-								<div className='absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200'></div>
-								<div className='relative'>
-									<button
-										onClick={() =>
-											setShowStatusFilter(
-												!showStatusFilter
-											)
-										}
-										className='bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 hover:bg-gray-900/90 flex items-center gap-3 min-w-52'
-									>
-										<Filter className='w-5 h-5 text-gray-400 group-hover:text-purple-400 transition-colors duration-300' />
-										<span>
-											{filterStatus
-												? statusLabels[filterStatus]
-												: "All Status"}
-										</span>
-										<ChevronDown
-											className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
-												showStatusFilter
-													? "rotate-180"
-													: ""
-											}`}
+							<div className='flex flex-col sm:flex-row gap-2 justify-between mt-3'>
+								<div className='relative group'>
+									<div className='max-w-sm absolute -inset-1 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200'></div>
+									<div className='relative'>
+										{/* <Calendar className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-green-400 transition-colors duration-300' /> */}
+										<input
+											type='date'
+											value={filterDate}
+											onChange={e =>
+												setFilterDate(e.target.value)
+											}
+											className='bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl pl-12 pr-4 py-4 text-white focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all duration-300 hover:bg-gray-900/90'
 										/>
-									</button>
+									</div>
+								</div>
 
-									{showStatusFilter && (
-										<div className='absolute top-full left-0 right-0 mt-2 bg-gray-900/90 backdrop-blur-sm border border-gray-700 rounded-xl shadow-2xl z-10 animate-in fade-in slide-in-from-top duration-200'>
-											<div className='p-2'>
-												<button
-													onClick={() => {
-														setFilterStatus("");
-														setShowStatusFilter(
-															false
+								{/* Enhanced Status Filter */}
+								<div className='relative group'>
+									<div className='absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200'></div>
+									<div className='relative'>
+										<button
+											onClick={() =>
+												setShowStatusFilter(
+													!showStatusFilter
+												)
+											}
+											className='bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 hover:bg-gray-900/90 flex items-center gap-3 min-w-52'
+										>
+											<Filter className='w-5 h-5 text-gray-400 group-hover:text-purple-400 transition-colors duration-300' />
+											<span>
+												{filterStatus
+													? statusLabels[filterStatus]
+													: "All Status"}
+											</span>
+											<ChevronDown
+												className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
+													showStatusFilter
+														? "rotate-180"
+														: ""
+												}`}
+											/>
+										</button>
+
+										{showStatusFilter && (
+											<div className='absolute top-full left-0 right-0 mt-2 bg-gray-900/90 backdrop-blur-sm border border-gray-700 rounded-xl shadow-2xl z-10 animate-in fade-in slide-in-from-top duration-200'>
+												<div className='p-2'>
+													<button
+														onClick={() => {
+															setFilterStatus("");
+															setShowStatusFilter(
+																false
+															);
+														}}
+														className='w-full text-left px-4 py-3 text-white hover:bg-gray-800/70 rounded-lg transition-all duration-200 flex items-center gap-3'
+													>
+														<Users className='w-4 h-4 text-gray-400' />
+														All Status
+													</button>
+													{Object.entries(
+														statusLabels
+													).map(([value, label]) => {
+														const IconComponent =
+															statusIcons[value];
+														return (
+															<button
+																key={value}
+																onClick={() => {
+																	setFilterStatus(
+																		value
+																	);
+																	setShowStatusFilter(
+																		false
+																	);
+																}}
+																className='w-full text-left px-4 py-3 text-white hover:bg-gray-800/70 rounded-lg transition-all duration-200 flex items-center gap-3'
+															>
+																<IconComponent className='w-4 h-4 text-gray-400' />
+																{label}
+															</button>
 														);
-													}}
-													className='w-full text-left px-4 py-3 text-white hover:bg-gray-800/70 rounded-lg transition-all duration-200 flex items-center gap-3'
-												>
-													<Users className='w-4 h-4 text-gray-400' />
-													All Status
-												</button>
-												{Object.entries(
-													statusLabels
-												).map(([value, label]) => {
-													const IconComponent =
-														statusIcons[value];
-													return (
-														<button
-															key={value}
-															onClick={() => {
-																setFilterStatus(
-																	value
-																);
-																setShowStatusFilter(
-																	false
-																);
-															}}
-															className='w-full text-left px-4 py-3 text-white hover:bg-gray-800/70 rounded-lg transition-all duration-200 flex items-center gap-3'
-														>
-															<IconComponent className='w-4 h-4 text-gray-400' />
-															{label}
-														</button>
-													);
-												})}
+													})}
+												</div>
 											</div>
-										</div>
-									)}
+										)}
+									</div>
 								</div>
 							</div>
 						</div>
