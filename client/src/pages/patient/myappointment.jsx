@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
 	ArrowLeft,
 	Calendar,
@@ -14,7 +14,6 @@ import {
 	Star,
 	Edit2,
 } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useNavigate, useParams } from "react-router-dom";
 
 const AppointmentDetailsPage = () => {
