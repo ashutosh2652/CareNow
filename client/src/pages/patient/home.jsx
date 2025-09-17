@@ -524,13 +524,9 @@ const MySavedDoctorsWidget = ({ doctors }) => {
 					<motion.div
 						className='flex'
 						style={{ gap: `${cardGap}px` }}
-						// --- FIX START ---
-						// The previous calculation was incorrect, causing the carousel to jump too far.
-						// This simpler calculation correctly determines the offset for each page.
 						animate={{
 							x: -currentIndex * (containerWidth + cardGap),
 						}}
-						// --- FIX END ---
 						transition={{
 							type: "spring",
 							stiffness: 300,
