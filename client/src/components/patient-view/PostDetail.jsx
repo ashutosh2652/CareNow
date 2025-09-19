@@ -55,7 +55,7 @@ export const PostDetail = ({ post, onGoBack }) => {
 							</span>
 						</div>
 
-						<h1 className='text-4xl md:text-6xl font-extrabold text-white mb-8 leading-tight bg-gradient-to-r from-white via-cyan-100 to-white bg-clip-text text-transparent'>
+						<h1 className='text-4xl md:text-6xl font-extrabold  mb-8 leading-tight bg-gradient-to-r from-white via-cyan-100 to-white bg-clip-text text-transparent'>
 							{post.title}
 						</h1>
 
