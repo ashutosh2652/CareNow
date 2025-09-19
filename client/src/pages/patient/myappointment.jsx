@@ -155,7 +155,7 @@ const AppointmentDetailsPage = () => {
 							</div>
 
 							<div className='flex-1'>
-								<h1 className='text-3xl font-bold text-white mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent'>
+								<h1 className='text-3xl font-bold  mb-2 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent'>
 									{appointmentData.doctor.name}
 								</h1>
 								<p className='text-purple-300 text-lg mb-3'>
