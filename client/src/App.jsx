@@ -15,8 +15,8 @@ import NotFound from "./not-found/NotFound";
 import PatientLayout from "./components/patient-view/Layout";
 import Blog from "./pages/patient/blog";
 import Home from "./pages/patient/home";
-import Contact from "./pages/patient/contact";
-import AboutUs from "./pages/patient/about";
+import Contact from "./pages/common/contact";
+import AboutUs from "./pages/common/about";
 import Appointment from "./pages/patient/appointment";
 import MyAppointment from "./pages/patient/myappointment";
 import Profile from "./pages/patient/profile";
@@ -24,6 +24,10 @@ import VerifyEmail from "./pages/common/verify-email";
 import SendVerificationEmailForPatient from "./pages/patient/SendVerificationEmail";
 import WrongView from "./pages/common/WrongView";
 import Doctors from "./pages/patient/doctors";
+import DoctorLayout from "./components/doctor-view/Layout";
+import DoctorProfile from "./pages/doctor/Profile";
+import DoctorAppointment from "./pages/doctor/MyAppointment";
+import DoctorAppointmentDetail from "./pages/doctor/MyAppointment";
 
 function App() {
 	const dispatch = useDispatch();
@@ -197,6 +201,72 @@ function App() {
 								>
 									<Profile />
 								</CheckAuth>
+							</Suspense>
+						}
+					/>
+				</Route>
+				<Route
+					path='doctor'
+					element={<DoctorLayout />}
+					errorElement={<ErrorPage />}
+				>
+					<Route
+						path='profile'
+						element={
+							<Suspense fallback={<Loading />}>
+								<CheckAuth
+									isAuthenticated={isAuthenticated}
+									user={user}
+								>
+									<DoctorProfile />
+								</CheckAuth>
+							</Suspense>
+						}
+					/>
+					<Route
+						path='blog'
+						element={
+							<Suspense fallback={<Loading />}>
+								<Blog />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='contact'
+						element={
+							<Suspense fallback={<Loading />}>
+								<Contact />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='about'
+						element={
+							<Suspense fallback={<Loading />}>
+								<AboutUs />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='appointment'
+						element={
+							<Suspense fallback={<Loading />}>
+								<CheckAuth
+									isAuthenticated={isAuthenticated}
+									user={user}
+								>
+									<DoctorAppointment />
+								</CheckAuth>
+							</Suspense>
+						}
+					/>
+					<Route
+						path='my-appointment/:appointmentId'
+						element={
+							<Suspense fallback={<Loading />}>
+								{/* <CheckAuth isAuthenticated={isAuthenticated} user={user}> */}
+								<DoctorAppointmentDetail />
+								{/* </CheckAuth> */}
 							</Suspense>
 						}
 					/>

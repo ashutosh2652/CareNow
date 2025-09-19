@@ -124,7 +124,7 @@ const statusIcons = {
 	cancelled_by_doctor: Stethoscope,
 };
 
-export default function Appointment() {
+export default function DoctorAppointment() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filterDate, setFilterDate] = useState("");
 	const [filterStatus, setFilterStatus] = useState("");
@@ -153,7 +153,7 @@ export default function Appointment() {
 
 	const handleViewDetails = appointmentId => {
 		console.log("View details for appointment:", appointmentId);
-		navigate(`/patient/my-appointment/${appointmentId}`);
+		navigate(`/doctor/my-appointment/${appointmentId}`);
 		return;
 	};
 
