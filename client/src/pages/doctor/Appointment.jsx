@@ -9,93 +9,99 @@ import {
 	Eye,
 	ChevronDown,
 	Sparkles,
-	Star,
 	Award,
 	Heart,
 	Stethoscope,
 	Users,
 	TrendingUp,
+	UserCheck,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const appointmentsData = [
 	{
 		id: "APT001",
-		doctorName: "Dr. Sarah Johnson",
-		specialty: "Cardiologist",
-		rating: 4.9,
-		experience: "12 years",
-		photo: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face",
+		patientName: "John Smith",
+		age: 45,
+		gender: "Male",
+		condition: "Chest Pain",
+		photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
 		appointmentDate: "2024-01-15",
 		startTime: "09:00",
 		endTime: "09:30",
 		meetingType: "online",
 		status: "scheduled",
+		isNewPatient: false,
 	},
 	{
 		id: "APT002",
-		doctorName: "Dr. Michael Chen",
-		specialty: "Neurologist",
-		rating: 4.8,
-		experience: "15 years",
-		photo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face",
+		patientName: "Sarah Johnson",
+		age: 32,
+		gender: "Female",
+		condition: "Follow-up Checkup",
+		photo: "https://images.unsplash.com/photo-1494790108755-2616b25395c5?w=150&h=150&fit=crop&crop=face",
 		appointmentDate: "2024-01-16",
 		startTime: "14:30",
 		endTime: "15:00",
 		meetingType: "in-person",
 		status: "completed",
+		isNewPatient: false,
 	},
 	{
 		id: "APT003",
-		doctorName: "Dr. Emily Davis",
-		specialty: "Dermatologist",
-		rating: 4.7,
-		experience: "8 years",
-		photo: "https://images.unsplash.com/photo-1594824919082-cc1cd40a5962?w=150&h=150&fit=crop&crop=face",
+		patientName: "Michael Chen",
+		age: 28,
+		gender: "Male",
+		condition: "Skin Consultation",
+		photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
 		appointmentDate: "2024-01-17",
 		startTime: "11:00",
 		endTime: "11:30",
 		meetingType: "online",
 		status: "cancelled_by_patient",
+		isNewPatient: true,
 	},
 	{
 		id: "APT004",
-		doctorName: "Dr. Robert Wilson",
-		specialty: "Orthopedist",
-		rating: 4.9,
-		experience: "20 years",
-		photo: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&h=150&fit=crop&crop=face",
+		patientName: "Emily Davis",
+		age: 55,
+		gender: "Female",
+		condition: "Joint Pain",
+		photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
 		appointmentDate: "2024-01-18",
 		startTime: "16:00",
 		endTime: "16:30",
 		meetingType: "in-person",
 		status: "cancelled_by_doctor",
+		isNewPatient: false,
 	},
 	{
 		id: "APT005",
-		doctorName: "Dr. Lisa Anderson",
-		specialty: "Pediatrician",
-		rating: 5.0,
-		experience: "10 years",
-		photo: "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?w=150&h=150&fit=crop&crop=face",
+		patientName: "Robert Wilson",
+		age: 8,
+		gender: "Male",
+		condition: "Routine Checkup",
+		photo: "https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?w=150&h=150&fit=crop&crop=face",
 		appointmentDate: "2024-01-19",
 		startTime: "10:30",
 		endTime: "11:00",
 		meetingType: "online",
 		status: "scheduled",
+		isNewPatient: false,
 	},
 	{
 		id: "APT006",
-		doctorName: "Dr. James Brown",
-		specialty: "Psychiatrist",
-		rating: 4.6,
-		experience: "18 years",
-		photo: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face",
+		patientName: "Lisa Anderson",
+		age: 42,
+		gender: "Female",
+		condition: "Mental Health",
+		photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
 		appointmentDate: "2024-01-20",
 		startTime: "13:00",
 		endTime: "13:30",
 		meetingType: "in-person",
 		status: "completed",
+		isNewPatient: true,
 	},
 ];
 
@@ -124,7 +130,7 @@ const statusIcons = {
 	cancelled_by_doctor: Stethoscope,
 };
 
-export default function DoctorAppointment() {
+export default function DoctorAppointmentView() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filterDate, setFilterDate] = useState("");
 	const [filterStatus, setFilterStatus] = useState("");
@@ -139,7 +145,7 @@ export default function DoctorAppointment() {
 
 	const filteredAppointments = useMemo(() => {
 		return appointmentsData.filter(appointment => {
-			const matchesSearch = appointment.doctorName
+			const matchesSearch = appointment.patientName
 				.toLowerCase()
 				.includes(searchTerm.toLowerCase());
 			const matchesDate =
@@ -153,7 +159,8 @@ export default function DoctorAppointment() {
 
 	const handleViewDetails = appointmentId => {
 		console.log("View details for appointment:", appointmentId);
-		navigate(`/doctor/my-appointment/${appointmentId}`);
+		// navigate(`/doctor/appointment-details/${appointmentId}`); // Commented out for demo
+		alert(`Viewing details for appointment ${appointmentId}`);
 		return;
 	};
 
@@ -197,9 +204,9 @@ export default function DoctorAppointment() {
 			bgColor: "bg-orange-500/10",
 		},
 		{
-			label: "Top Rated Docs",
-			value: appointmentsData.filter(apt => apt.rating >= 4.8).length,
-			icon: Star,
+			label: "New Patients",
+			value: appointmentsData.filter(apt => apt.isNewPatient).length,
+			icon: UserCheck,
 			color: "from-purple-500 to-pink-500",
 			bgColor: "bg-purple-500/10",
 		},
@@ -227,7 +234,7 @@ export default function DoctorAppointment() {
 							</h1>
 						</div>
 						<p className='text-gray-400 text-xl'>
-							Manage and view all your medical appointments
+							Manage and view all your patient appointments
 						</p>
 					</div>
 
@@ -268,7 +275,7 @@ export default function DoctorAppointment() {
 									<Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-blue-400 transition-colors duration-300' />
 									<input
 										type='text'
-										placeholder='Search by doctor name...'
+										placeholder='Search by patient name...'
 										value={searchTerm}
 										onChange={e =>
 											setSearchTerm(e.target.value)
@@ -283,7 +290,6 @@ export default function DoctorAppointment() {
 								<div className='relative group'>
 									<div className='max-w-sm absolute -inset-1 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200'></div>
 									<div className='relative'>
-										{/* <Calendar className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-green-400 transition-colors duration-300' /> */}
 										<input
 											type='date'
 											value={filterDate}
@@ -379,7 +385,7 @@ export default function DoctorAppointment() {
 											#
 										</th>
 										<th className='px-6 py-5 text-left text-sm font-semibold text-gray-300'>
-											Doctor
+											Patient
 										</th>
 										<th className='px-6 py-5 text-left text-sm font-semibold text-gray-300'>
 											Date
@@ -428,35 +434,37 @@ export default function DoctorAppointment() {
 																		appointment.photo
 																	}
 																	alt={
-																		appointment.doctorName
+																		appointment.patientName
 																	}
 																	className='relative w-12 h-12 rounded-full object-cover border-2 border-gray-600 group-hover:border-blue-400 transition-all duration-300'
 																	onError={e => {
-																		e.target.src = `https://ui-avatars.com/api/?name=${appointment.doctorName}&background=random&color=fff&size=150`;
+																		e.target.src = `https://ui-avatars.com/api/?name=${appointment.patientName}&background=random&color=fff&size=150`;
 																	}}
 																/>
-																<div className='absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center'>
-																	<Star className='w-3 h-3 text-white' />
-																</div>
+																{appointment.isNewPatient && (
+																	<div className='absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full flex items-center justify-center'>
+																		<UserCheck className='w-3 h-3 text-white' />
+																	</div>
+																)}
 															</div>
 															<div>
 																<div className='font-semibold text-white text-lg'>
 																	{
-																		appointment.doctorName
+																		appointment.patientName
 																	}
 																</div>
 																<div className='text-sm text-blue-400 font-medium'>
 																	{
-																		appointment.specialty
+																		appointment.condition
 																	}
 																</div>
 																<div className='flex items-center gap-2 mt-1'>
 																	<div className='flex items-center gap-1'>
-																		<Star className='w-3 h-3 text-yellow-400 fill-current' />
-																		<span className='text-xs text-yellow-400 font-medium'>
+																		<span className='text-xs text-gray-400'>
 																			{
-																				appointment.rating
-																			}
+																				appointment.age
+																			}{" "}
+																			yrs
 																		</span>
 																	</div>
 																	<span className='text-xs text-gray-500'>
@@ -464,10 +472,20 @@ export default function DoctorAppointment() {
 																	</span>
 																	<span className='text-xs text-gray-400'>
 																		{
-																			appointment.experience
-																		}{" "}
-																		exp
+																			appointment.gender
+																		}
 																	</span>
+																	{appointment.isNewPatient && (
+																		<>
+																			<span className='text-xs text-gray-500'>
+																				•
+																			</span>
+																			<span className='text-xs text-emerald-400 font-medium'>
+																				New
+																				Patient
+																			</span>
+																		</>
+																	)}
 																</div>
 															</div>
 														</div>

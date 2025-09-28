@@ -26,8 +26,11 @@ import WrongView from "./pages/common/WrongView";
 import Doctors from "./pages/patient/doctors";
 import DoctorLayout from "./components/doctor-view/Layout";
 import DoctorProfile from "./pages/doctor/Profile";
-import DoctorAppointment from "./pages/doctor/MyAppointment";
+import DoctorAppointment from "./pages/doctor/Appointment";
 import DoctorAppointmentDetail from "./pages/doctor/MyAppointment";
+import DoctorDashboard from "./pages/doctor/Home";
+import ChatWithPatient from "./pages/doctor/ChatWithPatient";
+import VideoCall from "./pages/doctor/VideoCall";
 
 function App() {
 	const dispatch = useDispatch();
@@ -206,10 +209,34 @@ function App() {
 					/>
 				</Route>
 				<Route
-					path='doctor'
+					path='/doctor'
 					element={<DoctorLayout />}
 					errorElement={<ErrorPage />}
 				>
+					<Route
+						path=''
+						element={
+							<Suspense fallback={<Loading />}>
+								<DoctorDashboard />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='chat'
+						element={
+							<Suspense fallback={<Loading />}>
+								<ChatWithPatient />
+							</Suspense>
+						}
+					/>
+					<Route
+						path='online-appointment'
+						element={
+							<Suspense fallback={<Loading />}>
+								<VideoCall />
+							</Suspense>
+						}
+					/>
 					<Route
 						path='profile'
 						element={
