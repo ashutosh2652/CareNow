@@ -1,15 +1,22 @@
 # CareNow - Healthcare Management System
 
-## Project Overview
-CareNow is a comprehensive healthcare management system that connects patients with doctors and administrators. The project is built using React for the frontend and Node.js for the backend, with separate portals for patients, doctors, and administrators.
+<div align="center">
+  <img src="client/src/assets/CareNow-logo.png" alt="CareNow Logo" width="200">
+  <p><em>Transforming Healthcare Management with Technology</em></p>
+</div>
 
-## Project Structure
-```
+## 🌟 Project Overview
+
+CareNow is a modern healthcare management platform that seamlessly connects patients, doctors, and administrators. Built with React and Node.js, it provides separate portals for each user type, offering a comprehensive solution for healthcare service delivery.
+
+## 🏗️ Project Structure
+
+```bash
 CareNow/
-├── admin/          # Admin portal
-├── client/         # Patient portal
-├── doctor/         # Doctor portal
-└── server/         # Backend API
+├── admin/          # Administrative dashboard
+├── client/         # Patient-facing application
+├── docs/           # Documentation
+└── server/         # Backend API services
 ```
 
 ## Features
