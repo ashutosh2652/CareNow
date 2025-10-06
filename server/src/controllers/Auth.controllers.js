@@ -100,13 +100,16 @@ const LoginUser = async (req, res, next) => {
             return next(new ApiError(400, "Please login with google!"));
         if (!user.isPasswordCorrect(password))
             return next(new ApiError(400, "Please provide correct password!"));
-        if (!user.isEmailVerified)
-            return next(
-                new ApiError(
-                    400,
-                    "Please verify your email first to login to account!"
-                )
-            );
+        if (!user.isEmailVerified) {
+            const { password, ...prevuser } = user;
+            console.log(prevuser, "prevuser");
+            // console.log(user, "user");
+
+            return res.status(400).json({
+                user: prevuser._doc,
+                message: "Please login first to verify!",
+            });
+        }
         req.login(user, (err) => {
             if (err) return next(err);
             res.status(200).json(

@@ -17,7 +17,7 @@ export const PersonalSection = ({ data, isEditing, onChange }) => (
 					Personal Information
 				</h2>
 				<p className='text-slate-400 mt-1'>
-					Basic personal details and identification
+					Basic personal details, identification, and address
 				</p>
 			</div>
 		</div>
@@ -77,6 +77,51 @@ export const PersonalSection = ({ data, isEditing, onChange }) => (
 					disabled={!isEditing}
 				/>
 			</div>
+
+			<div className='md:col-span-2'>
+				<ProfileInput
+					label='Street Address'
+					icon='📍'
+					value={data.street_address}
+					onChange={e =>
+						onChange(
+							"personalInfo",
+							"street_address",
+							e.target.value
+						)
+					}
+					disabled={!isEditing}
+					placeholder='e.g., 123 Main St'
+				/>
+			</div>
+			<ProfileInput
+				label='City'
+				icon='🏙️'
+				value={data.city}
+				onChange={e => onChange("personalInfo", "city", e.target.value)}
+				disabled={!isEditing}
+				placeholder='Enter city'
+			/>
+			<ProfileInput
+				label='State / Province'
+				icon='🗺️'
+				value={data.state}
+				onChange={e =>
+					onChange("personalInfo", "state", e.target.value)
+				}
+				disabled={!isEditing}
+				placeholder='Enter state or province'
+			/>
+			<ProfileInput
+				label='Zip / Postal Code'
+				icon='📮'
+				value={data.zip_code}
+				onChange={e =>
+					onChange("personalInfo", "zip_code", e.target.value)
+				}
+				disabled={!isEditing}
+				placeholder='Enter zip or postal code'
+			/>
 		</div>
 	</motion.div>
 );

@@ -16,7 +16,6 @@ import {
 	Calendar,
 	UserCheck,
 	Phone,
-	Mail,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 

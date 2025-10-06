@@ -7,56 +7,53 @@ import { getUser, RegisterUser } from "../../store/auth";
 import { useEffect } from "react";
 
 const initialState = {
-  fullName: "",
-  email: "",
-  phone: "",
-  password: "",
+	fullName: "",
+	email: "",
+	phone: "",
+	password: "",
 };
 function Register() {
-  const [formData, setformData] = useState(initialState);
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
-  function onSubmit(event) {
-    event.preventDefault();
-    console.log(formData, "formaData");
+	const [formData, setformData] = useState(initialState);
+	const dispatch = useDispatch();
+	const { user } = useSelector(state => state.auth);
+	const navigate = useNavigate();
+	function onSubmit(event) {
+		event.preventDefault();
+		console.log(formData, "formaData");
 
-    dispatch(RegisterUser({ ...formData })).then((data) => {
-      // console.log(data, "data");
-
-      if (data?.payload?.success) {
-        setformData(initialState);
-        dispatch(getUser());
-      }
-    });
-  }
-  // console.log(user, "user");
-  useEffect(() => {
-    if (user && !user.isEmailVerified) {
-      if (user.role === "patient") {
-        navigate("/patient/resend-email");
-      } else if (user.role === "doctor") {
-        navigate("/doctor/resend-email");
-      }
-    }
-  }, [user, dispatch]);
-  return (
-    <div className="w-full mx-auto grid gap-1.5">
-      <h1>Create New Account</h1>
-      <CommonForm
-        formControls={registerFormControl}
-        formData={formData}
-        setformData={setformData}
-        onSubmit={onSubmit}
-        buttonText={"Create New Account"}
-      />
-      <div className="flex gap-5 mt-2">
-        <h3>Already have Account </h3>
-        <Link to={"/auth/login"} className="text-blue-400">
-          Login
-        </Link>
-      </div>
-    </div>
-  );
+		dispatch(RegisterUser({ ...formData })).then(data => {
+			if (data?.payload?.success) {
+				setformData(initialState);
+				dispatch(getUser());
+			}
+		});
+	}
+	useEffect(() => {
+		if (user && !user.isEmailVerified) {
+			if (user.role === "patient") {
+				navigate("/patient/resend-email");
+			} else if (user.role === "doctor") {
+				navigate("/doctor/resend-email");
+			}
+		}
+	}, [user, dispatch]);
+	return (
+		<div className='w-full mx-auto grid gap-1.5'>
+			<h1>Create New Account</h1>
+			<CommonForm
+				formControls={registerFormControl}
+				formData={formData}
+				setformData={setformData}
+				onSubmit={onSubmit}
+				buttonText={"Create New Account"}
+			/>
+			<div className='flex gap-5 mt-2'>
+				<h3>Already have Account </h3>
+				<Link to={"/auth/login"} className='text-blue-400'>
+					Login
+				</Link>
+			</div>
+		</div>
+	);
 }
 export default Register;
